@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.mp-search-course {
+  display: flex;
+  align-items: center;
+
+  input {
+    margin-right: 10px;
+    width: 240px;
+  }
+}

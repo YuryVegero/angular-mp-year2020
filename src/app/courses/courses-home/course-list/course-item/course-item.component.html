@@ -1,5 +1,18 @@
-<div class="mp-course-list-item">
-  <span>course-item</span>
-  <mp-edit-course></mp-edit-course>
-  <mp-delete-course></mp-delete-course>
+<div class="mp-course">
+  <div class="row">
+    <div class="mp-course__info col-10">
+      <div class="mp-course__heading">
+        <div class="mp-course__title">{{course.title}}</div>
+        <div class="mp-course__time">
+          <div class="mp-course__duration">{{course.duration}} mins</div>
+          <div class="mp-course__created-at">{{getDate()}}</div>
+        </div>
+      </div>
+      <div class="mp-course__description">{{course.description}}</div>
+    </div>
+    <div class="mp-course__controls col-2">
+      <mp-button (clicked)="onEditClick()">Edit</mp-button>
+      <mp-button (clicked)="onDeleteClick()">Delete</mp-button>
+    </div>
+  </div>
 </div>

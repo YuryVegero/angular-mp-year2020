@@ -1,10 +1,16 @@
 <div class="mp-courses">
   <mp-breadcrumb></mp-breadcrumb>
-  <div class="mp-courses__section">
-    <mp-search-course></mp-search-course>
-    <mp-add-course></mp-add-course>
+  <div class="mp-courses__content">
+    <div class="container">
+      <mp-search-course></mp-search-course>
+      <mp-add-course></mp-add-course>
+      <mp-course-list
+        [courses]="courses"
+        (courseDelete)="onCourseDelete($event)"
+        (courseEdit)="onCourseEdit($event)"
+      ></mp-course-list>
+      <mp-load-more></mp-load-more>
+    </div>
   </div>
-  <mp-course-list></mp-course-list>
-  <mp-load-more></mp-load-more>
 </div>
 

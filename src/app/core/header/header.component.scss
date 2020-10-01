@@ -1,0 +1,47 @@
+@import 'base';
+
+.mp-header {
+  background: $background-nav;
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+
+    > div {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__logo {
+    box-sizing: border-box;
+    border-color: #B4D084;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    position: relative;
+
+    &::after {
+      content: '';
+      display: block;
+      border-left: 16px solid lightblue;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -6px;
+    }
+  }
+
+  &__title {
+    color: $white;
+    font-size: 18px;
+    font-weight: 700;
+    margin-left: 10px;
+    text-transform: uppercase;
+  }
+}
