@@ -12,13 +12,6 @@ branches:
 notifications:
   email: false
 
-addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
-
 cache:
   directories:
     - ./node_modules
@@ -30,8 +23,7 @@ script:
   - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
 
 before_deploy:
-  - npm run build -- --prod --base-href /angular-mp-year2020/
-  - cp dist/angular-mp-year2020/index.html dist/angular-mp-year2020/404.html
+  - npm run build -- --prod --base-href https://yuryvegero.github.io/angular-mp-year2020
 
 deploy:
   provider: pages
