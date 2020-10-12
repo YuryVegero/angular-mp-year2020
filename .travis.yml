@@ -17,7 +17,7 @@ install:
   - npm install
 
 script:
-  - npm run build --base-href /angular-mp-year2020/
+  - npm run build --base-href angular-mp-year2020
 
 deploy:
   provider: pages
