@@ -12,13 +12,6 @@ branches:
 notifications:
   email: false
 
-addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
-
 cache:
   directories:
     - ./node_modules
@@ -27,9 +20,6 @@ install:
   - npm install
 
 script:
-  - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
-
-before_deploy:
   - npm run build
 
 deploy:
