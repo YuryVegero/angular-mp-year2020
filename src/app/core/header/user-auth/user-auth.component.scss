@@ -9,6 +9,6 @@
   }
 
   &__logout {
-    @include link-color(white, white, white, white);
+    @include link-color($white, $white, $white, $white);
   }
 }
