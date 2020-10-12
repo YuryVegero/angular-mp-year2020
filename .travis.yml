@@ -1,6 +1,3 @@
-dist: trusty
-sudo: required
-
 language: node_js
 node_js:
   - "12"
@@ -20,7 +17,7 @@ install:
   - npm install
 
 script:
-  - npm run build
+  - npm run build --base-href /angular-mp-year2020/
 
 deploy:
   provider: pages
