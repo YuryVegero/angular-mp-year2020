@@ -15,7 +15,7 @@ export class CourseItemComponent {
     const {createdAt} = this.course;
     return [
       createdAt.getDate(),
-      createdAt.getDay(),
+      createdAt.getMonth(),
       createdAt.getFullYear(),
     ].join('/');
   }
