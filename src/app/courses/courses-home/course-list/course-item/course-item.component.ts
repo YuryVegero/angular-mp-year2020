@@ -8,8 +8,8 @@ import { Course } from 'app/courses/course.model';
 })
 export class CourseItemComponent {
   @Input() course: Course;
-  @Output() courseDelete = new EventEmitter<any>();
-  @Output() courseEdit = new EventEmitter<any>();
+  @Output() courseDelete = new EventEmitter<Course>();
+  @Output() courseEdit = new EventEmitter<Course>();
 
   getDate(): string { // TODO replace with Pipe
     const {createdAt} = this.course;
@@ -21,10 +21,10 @@ export class CourseItemComponent {
   }
 
   onDeleteClick(): void {
-    this.courseDelete.emit();
+    this.courseDelete.emit(this.course);
   }
 
   onEditClick(): void {
-    this.courseEdit.emit();
+    this.courseEdit.emit(this.course);
   }
 }

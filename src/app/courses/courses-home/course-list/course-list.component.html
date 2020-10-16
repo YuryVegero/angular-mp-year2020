@@ -2,8 +2,8 @@
   <mp-course-item
     *ngFor="let course of courses"
     [course]="course"
-    (courseDelete)="onCourseDelete(course)"
-    (courseEdit)="onCourseEdit(course)"
+    (courseDelete)="onCourseDelete($event)"
+    (courseEdit)="onCourseEdit($event)"
     class="mp-course-list__item"
   >
   </mp-course-item>
