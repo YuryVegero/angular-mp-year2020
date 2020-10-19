@@ -1,19 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CoursesHomeComponent } from './courses-home.component';
+import { CourseListComponent } from 'app/courses/courses-home/course-list';
 import { courses } from 'app/courses/courses-home/course.mock';
 import { By } from '@angular/platform-browser';
+import { SharedModule } from 'app/shared/shared.module';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 
-describe('CoursesComponent', () => {
+describe('CoursesHomeComponent', () => {
   let component: CoursesHomeComponent;
   let fixture: ComponentFixture<CoursesHomeComponent>;
   let coursesHomeDebug: DebugElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CoursesHomeComponent],
+      declarations: [ CoursesHomeComponent, CourseListComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+      imports: [ SharedModule ],
     })
       .compileComponents();
   });
@@ -29,16 +32,11 @@ describe('CoursesComponent', () => {
   });
 
   it('should set courses on ngInit', () => {
-    spyOn(component, 'getCourses').and.returnValue(courses);
-    expect(component.courses.length).toBe(0);
+    const getCoursesSpy = spyOn<any>(component, 'getCourses').and.returnValue(courses);
+    expect(component.filteredCourses.length).toBe(0);
     fixture.detectChanges();
-    expect(component.courses.length).not.toBe(0);
-  });
-
-  it('should call getCourses on ngInit', () => {
-    spyOn(component, 'getCourses');
-    fixture.detectChanges();
-    expect(component.getCourses).toHaveBeenCalled();
+    expect(getCoursesSpy).toHaveBeenCalled();
+    expect(component.filteredCourses.length).not.toBe(0);
   });
 
   it('should log on onCourseDelete fn call', () => {
@@ -48,6 +46,7 @@ describe('CoursesComponent', () => {
   });
 
   it('should call onCourseDelete fn on courseDelete event', () => {
+    fixture.detectChanges();
     spyOn(component, 'onCourseDelete');
     const courseListDebug = coursesHomeDebug.query(By.css('mp-course-list'));
     courseListDebug.triggerEventHandler('courseDelete', courses[0]);
@@ -60,16 +59,48 @@ describe('CoursesComponent', () => {
     expect(console.log).toHaveBeenCalled();
   });
 
-  it('should call onCourseEdit fn on courseDelete event', () => {
+  it('should call onCourseEdit fn on courseEdit event', () => {
+    fixture.detectChanges();
     spyOn(component, 'onCourseEdit');
     const courseListDebug = coursesHomeDebug.query(By.css('mp-course-list'));
     courseListDebug.triggerEventHandler('courseEdit', courses[0]);
     expect(component.onCourseEdit).toHaveBeenCalledWith(courses[0]);
   });
 
-  it('should render mp-course-list', () => {
-    const child = coursesHomeDebug.query(By.css('mp-course-list'));
-    expect(child).toBeDefined();
+  it('should filter courses on onCourseSearch fn call', () => {
+    fixture.detectChanges();
+    const filterCoursesSpy = spyOn<any>(component, 'filterCourses');
+    expect(filterCoursesSpy).not.toHaveBeenCalled();
+
+    component.onCourseSearch('abc');
+    fixture.detectChanges();
+    expect(filterCoursesSpy).toHaveBeenCalled();
+  });
+
+  it('should call onCourseSearch fn on courseSearch event', () => {
+    fixture.detectChanges();
+    spyOn(component, 'onCourseSearch');
+    const searchCourseDebug = coursesHomeDebug.query(By.css('mp-search-course'));
+    searchCourseDebug.triggerEventHandler('courseSearch', 'term');
+    expect(component.onCourseSearch).toHaveBeenCalledWith('term');
+  });
+
+  describe('Conditional rendering of mp-course-list', () => {
+    it('should render mp-course-list if hasCourses returns true', () => {
+      spyOn(component, 'hasCourses').and.returnValue(true);
+      fixture.detectChanges();
+      const child = coursesHomeDebug.query(By.css('mp-course-list'));
+      expect(child).toBeDefined();
+    });
+
+    it('should render "No data" message if hasCourses return false', () => {
+      spyOn(component, 'hasCourses').and.returnValue(false);
+      fixture.detectChanges();
+
+      const child = coursesHomeDebug.query(By.css('mp-course-list'));
+      expect(child).toBeNull();
+      expect(coursesHomeDebug.nativeElement.innerHTML).toContain('No data. Feel free to add a new course.');
+    });
   });
 
   it('should render mp-breadcrumb', () => {
