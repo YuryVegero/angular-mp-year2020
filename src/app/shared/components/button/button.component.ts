@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'mp-button',
@@ -7,9 +7,4 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ButtonComponent {
   @Input() className = 'btn-primary';
-  @Output() clicked = new EventEmitter<MouseEvent>();
-
-  onClickButton(event): void {
-    this.clicked.emit(event);
-  }
 }
