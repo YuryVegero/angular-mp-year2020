@@ -11,15 +11,6 @@ export class CourseItemComponent {
   @Output() courseDelete = new EventEmitter<Course>();
   @Output() courseEdit = new EventEmitter<Course>();
 
-  getDate(): string { // TODO replace with Pipe
-    const {createdAt} = this.course;
-    return [
-      createdAt.getDate(),
-      createdAt.getMonth(),
-      createdAt.getFullYear(),
-    ].join('/');
-  }
-
   onDeleteClick(): void {
     this.courseDelete.emit(this.course);
   }
