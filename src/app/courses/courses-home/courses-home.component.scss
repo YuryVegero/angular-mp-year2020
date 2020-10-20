@@ -1,0 +1,22 @@
+.mp-courses {
+  &__content {
+    background: #F5F6FA;
+    padding: 20px 0;
+  }
+
+  mp-search-course {
+    margin-bottom: 20px;
+  }
+
+  mp-add-course {
+    margin-bottom: 20px;
+  }
+
+  mp-course-list {
+    margin: 20px 0;
+  }
+
+  mp-load-more {
+    margin-bottom: 20px;
+  }
+}

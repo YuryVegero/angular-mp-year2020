@@ -1,1 +1,4 @@
-<p>search-course works!</p>
+<div class="mp-search-course">
+  <input [(ngModel)]="searchTerm" class="form-control" type="text" placeholder="Text to search"/>
+  <mp-button (click)="onSearchClick()" className="btn-success">Search</mp-button>
+</div>

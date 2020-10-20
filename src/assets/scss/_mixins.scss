@@ -1,0 +1,19 @@
+@import 'variables/colors';
+
+@mixin link-color($link: $white, $visited: $white, $hover: $white, $active: $white) {
+  & {
+    color: $link;
+
+    &:visited {
+      color: $visited;
+    }
+
+    &:hover {
+      color: $hover;
+    }
+
+    &:active, &:focus {
+      color: $active;
+    }
+  }
+}

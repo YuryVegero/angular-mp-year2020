@@ -1,4 +1,10 @@
 <div class="mp-course-list">
-  <mp-course-item></mp-course-item>
-  <mp-course-item></mp-course-item>
+  <mp-course-item
+    *ngFor="let course of courses"
+    [course]="course"
+    (courseDelete)="onCourseDelete($event)"
+    (courseEdit)="onCourseEdit($event)"
+    class="mp-course-list__item"
+  >
+  </mp-course-item>
 </div>
