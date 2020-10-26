@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddCourseComponent } from './add-course.component';
 import { By } from '@angular/platform-browser';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('AddCourseComponent', () => {
   let component: AddCourseComponent;
@@ -9,9 +10,10 @@ describe('AddCourseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddCourseComponent ]
+      declarations: [ AddCourseComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

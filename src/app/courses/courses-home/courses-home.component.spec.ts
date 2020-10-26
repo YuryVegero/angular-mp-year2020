@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CoursesHomeComponent } from './courses-home.component';
 import { courses } from 'app/courses/courses-home/course.mock';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 
 describe('CoursesComponent', () => {
   let component: CoursesHomeComponent;
@@ -12,7 +12,8 @@ describe('CoursesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CoursesHomeComponent]
+      declarations: [CoursesHomeComponent],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     })
       .compileComponents();
   });

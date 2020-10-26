@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CourseListComponent } from './course-list.component';
 import { courses } from 'app/courses/courses-home/course.mock';
-import { DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 
@@ -12,7 +12,7 @@ describe('CourseListComponent class only', () => {
 
   beforeEach(() => {
     component = new CourseListComponent();
-    component.courses = [...courses];
+    component.courses = [ ...courses ];
   });
 
   it('should emit the courseEdit event when calling the onCourseEdit fn', () => {
@@ -36,7 +36,8 @@ describe('CourseListComponent as component', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CourseListComponent]
+      declarations: [ CourseListComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     })
       .compileComponents();
   });
@@ -44,7 +45,7 @@ describe('CourseListComponent as component', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CourseListComponent);
     component = fixture.componentInstance;
-    component.courses = [...courses];
+    component.courses = [ ...courses ];
     courseListDebug = fixture.debugElement.query(By.css('.mp-course-list'));
     fixture.detectChanges();
   });

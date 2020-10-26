@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormsModule } from '@angular/forms';
 import { SearchCourseComponent } from './search-course.component';
-import { DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { click } from 'tests/unit';
 
@@ -12,7 +12,9 @@ describe('SearchCourseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SearchCourseComponent ]
+      declarations: [ SearchCourseComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+      imports: [ FormsModule ],
     })
     .compileComponents();
   });

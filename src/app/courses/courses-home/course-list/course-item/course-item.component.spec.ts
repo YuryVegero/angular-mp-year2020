@@ -1,4 +1,4 @@
-import { Component, DebugElement } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CourseItemComponent } from './course-item.component';
@@ -38,8 +38,9 @@ describe('CourseItemComponent as component', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CourseItemComponent],
-      imports: [SharedModule],
+      declarations: [ CourseItemComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+      imports: [ SharedModule ],
     })
       .compileComponents();
   });
@@ -109,7 +110,10 @@ describe('CourseItemComponent when inside a test host', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed
-      .configureTestingModule({ declarations: [CourseItemComponent, TestHostComponent] })
+      .configureTestingModule({
+        declarations: [ CourseItemComponent, TestHostComponent ],
+        schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+      })
       .compileComponents();
   }));
 
