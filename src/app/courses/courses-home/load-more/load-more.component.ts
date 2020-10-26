@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./load-more.component.scss']
 })
 export class LoadMoreComponent {
-  onClick() {
+  onClick(): void {
     console.log('clicked');
   }
 }

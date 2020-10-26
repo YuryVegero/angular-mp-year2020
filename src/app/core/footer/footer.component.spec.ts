@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterComponent } from './footer.component';
+import { By } from '@angular/platform-browser';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -8,9 +9,9 @@ describe('FooterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterComponent ]
+      declarations: [FooterComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -21,5 +22,9 @@ describe('FooterComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should include wrapper', () => {
+    expect(fixture.debugElement.query(By.css('.mp-footer'))).toBeDefined();
   });
 });

@@ -100,7 +100,15 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/assets/scss"
+              ]
+            },
+            "scripts": [],
+            "codeCoverageExclude": [
+              "src/tests/**"
+            ]
           }
         },
         "lint": {

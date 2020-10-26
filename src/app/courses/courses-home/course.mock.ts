@@ -2,7 +2,7 @@ import { Course } from 'app/courses/course.model';
 
 export const courses: Course[] = [
   new Course({
-    createdAt: new Date(),
+    createdAt: new Date(2018, 10, 24),
     id: '1',
     title: 'Angular',
     duration: 88,
