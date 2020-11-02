@@ -6,8 +6,8 @@ import { FilterByPipe } from 'app/shared/pipes/filter-by.pipe';
 @Component({
   selector: 'mp-courses-home',
   templateUrl: './courses-home.component.html',
-  styleUrls: ['./courses-home.component.scss'],
-  providers: [FilterByPipe],
+  styleUrls: [ './courses-home.component.scss' ],
+  providers: [ FilterByPipe ],
 })
 export class CoursesHomeComponent implements OnInit {
   private courses: Course[] = [];
@@ -20,7 +20,7 @@ export class CoursesHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.courses = this.getCourses();
-    this.filterCourses();
+    this.filteredCourses = [ ...this.courses ];
   }
 
   hasCourses(): boolean {

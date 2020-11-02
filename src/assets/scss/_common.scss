@@ -1,0 +1,9 @@
+.mp-highlight {
+  &--future {
+    border: 2px solid blue;
+  }
+
+  &--new {
+    border: 2px solid green;
+  }
+}

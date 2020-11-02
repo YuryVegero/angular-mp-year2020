@@ -5,8 +5,8 @@ import { SharedModule } from 'app/shared/shared.module';
 import { courses } from 'app/courses/courses-home/course.mock';
 
 const todayDate = new Date(2020, 9, 23);
-const borderGreen = '2px solid green';
-const borderBlue = '2px solid blue';
+const newClassName = 'mp-highlight--new';
+const futureClassName = 'mp-highlight--future';
 
 describe('HighlightFreshDirective', () => {
   let component: CourseItemComponent;
@@ -35,33 +35,33 @@ describe('HighlightFreshDirective', () => {
     component.course = courses[0];
   });
 
-  it('should have blue border for a future date course', () => {
+  it(`should add the "${futureClassName}" css class for a future date course`, () => {
     component.course.createdAt = new Date(2020, 9, 24);
     fixture.detectChanges();
     const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-    expect(courseEl.style.border).toBe(borderBlue);
+    expect(courseEl.classList).toContain(futureClassName);
   });
 
-  describe('should have green border for a course within 2 weeks until today', () => {
+  describe(`should add the "${newClassName}" for a course within 2 weeks until today`, () => {
     it('1 day before today', () => {
       component.course.createdAt = new Date(2020, 9, 22);
       fixture.detectChanges();
       const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-      expect(courseEl.style.border).toBe(borderGreen);
+      expect(courseEl.classList).toContain(newClassName);
     });
 
     it('14 days before today', () => {
       component.course.createdAt = new Date(2020, 9, 9);
       fixture.detectChanges();
       const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-      expect(courseEl.style.border).toBe(borderGreen);
+      expect(courseEl.classList).toContain(newClassName);
     });
 
     it('15 days before today', () => {
       component.course.createdAt = new Date(2020, 9, 8);
       fixture.detectChanges();
       const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-      expect(courseEl.style.border).not.toBe(borderGreen);
+      expect(courseEl.classList).not.toContain(newClassName);
     });
   });
 

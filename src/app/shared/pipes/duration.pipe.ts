@@ -13,10 +13,7 @@ export class DurationPipe implements PipeTransform {
 
   transform(mins: number): string {
     const [ hours, minutes ] = DurationPipe.toHoursAndMinutes(mins);
-    if (hours > 0) {
-      return `${hours}h ${minutes}min`;
-    }
-    return `${minutes}min`;
+    return (hours > 0) ? `${hours}h ${minutes}min` : `${minutes}min`;
   }
 
 }

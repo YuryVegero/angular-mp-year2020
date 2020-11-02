@@ -13,11 +13,6 @@ export class FilterByPipe implements PipeTransform {
     }
 
     const searchTerm = term.toLowerCase();
-    return items.filter((item) => {
-      if (!item[field]) {
-        return false;
-      }
-      return item[field]?.toLowerCase()?.includes(searchTerm);
-    });
+    return items.filter(item => item[field]?.toLowerCase()?.includes(searchTerm));
   }
 }
