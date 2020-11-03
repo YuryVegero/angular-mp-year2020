@@ -7,6 +7,7 @@ import { AddCourseComponent } from './courses-home/add-course';
 import { SearchCourseComponent } from './courses-home/search-course';
 import { LoadMoreComponent } from './courses-home/load-more';
 import { CoursesRoutingModule } from './courses-routing.module';
+import { CourseService } from './course.service';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { CoursesRoutingModule } from './courses-routing.module';
   exports: [
     CoursesHomeComponent,
   ],
+  providers: [ CourseService ]
 })
 export class CoursesModule {
 }

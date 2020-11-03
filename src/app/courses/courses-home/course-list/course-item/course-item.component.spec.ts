@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CourseItemComponent } from './course-item.component';
-import { courses } from 'app/courses/courses-home/course.mock';
+import { courses } from 'app/courses/course.mock';
 import { By } from '@angular/platform-browser';
 import { Course } from 'app/courses/course.model';
 import { SharedModule } from 'app/shared/shared.module';

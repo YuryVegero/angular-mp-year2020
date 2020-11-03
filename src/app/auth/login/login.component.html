@@ -1,0 +1,30 @@
+<div class="mp-login">
+  <div class="form-group">
+    <label for="email">E-Mail</label>
+    <input
+      [(ngModel)]="email"
+      type="email"
+      id="email"
+      class="form-control"
+      name="email"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input
+      [(ngModel)]="password"
+      type="password"
+      id="password"
+      class="form-control"
+      name="password"
+      required
+      minlength="6"
+    />
+  </div>
+  <div>
+    <button class="btn btn-primary" type="button" (click)="onSubmit()">
+      Login
+    </button>
+  </div>
+</div>

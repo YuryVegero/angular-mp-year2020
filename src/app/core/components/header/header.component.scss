@@ -1,6 +1,7 @@
 @import 'base';
 
 .mp-header {
+  color: $white;
   background: $background-nav;
 
   &__container {
@@ -8,9 +9,10 @@
     justify-content: space-between;
     padding: 20px 0;
 
-    > div {
-      display: flex;
+    > a {
       align-items: center;
+      display: flex;
+      text-decoration: none;
     }
   }
 
@@ -43,5 +45,13 @@
     font-weight: 700;
     margin-left: 10px;
     text-transform: uppercase;
+  }
+
+  &__auth-block {
+    font-size: 14px;
+
+    a {
+      @include link-color($white, $white, $white, $white);
+    }
   }
 }

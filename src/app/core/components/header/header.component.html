@@ -1,0 +1,25 @@
+<header class="mp-header">
+  <div class="container">
+    <div class="mp-header__container">
+      <a routerLink="/" href="javascript:void(0);">
+        <div class="mp-header__logo"></div>
+        <span class="mp-header__title">Video course</span>
+      </a>
+
+      <div *ngIf="authBlockVisible" class="mp-header__auth-block">
+        <ng-container *ngIf="authenticated; else notAuth">
+          <span>{{userLogin}} |</span>
+          <a (click)="logout()" href="javascript:void(0);">
+            Log out
+          </a>
+        </ng-container>
+
+        <ng-template #notAuth>
+          <a routerLink="/login" href="javascript:void(0);">
+            Log in
+          </a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</header>

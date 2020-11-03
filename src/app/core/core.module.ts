@@ -1,19 +1,19 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header';
-import { FooterComponent } from './footer';
-import { UserAuthComponent } from './header/user-auth';
-import { AuthModule } from 'app/auth/auth.module';
+import { RouterModule } from '@angular/router';
+
+import { HeaderComponent } from './components/header';
+import { FooterComponent } from './components/footer';
+
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
-    UserAuthComponent,
   ],
   imports: [
     CommonModule,
-    AuthModule,
+    RouterModule,
   ],
   exports: [
     HeaderComponent,
@@ -21,4 +21,11 @@ import { AuthModule } from 'app/auth/auth.module';
   ]
 })
 export class CoreModule {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    if (parentModule) {
+      throw new Error(
+        `${CoreModule.name} has already been loaded. Import the module in the AppModule only.`
+      );
+    }
+  }
 }
