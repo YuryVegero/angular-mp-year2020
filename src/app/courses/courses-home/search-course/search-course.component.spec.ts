@@ -16,7 +16,7 @@ describe('SearchCourseComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       imports: [ FormsModule ],
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -37,9 +37,10 @@ describe('SearchCourseComponent', () => {
     expect(component.onSearchClick).toHaveBeenCalled();
   });
 
-  it('should log on onSearchClick call', () => {
-    spyOn(console, 'log');
+  it('should emit searchTerm on onSearchClick call', () => {
+    component.courseSearch.subscribe((term: string) => {
+      expect(component.searchTerm).toBe(term);
+    });
     component.onSearchClick();
-    expect(console.log).toHaveBeenCalled();
   });
 });

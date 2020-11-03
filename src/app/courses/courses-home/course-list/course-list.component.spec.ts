@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CourseListComponent } from './course-list.component';
 import { courses } from 'app/courses/courses-home/course.mock';
+import { SharedModule } from 'app/shared/shared.module';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
@@ -38,6 +39,7 @@ describe('CourseListComponent as component', () => {
     await TestBed.configureTestingModule({
       declarations: [ CourseListComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+      imports: [ SharedModule ],
     })
       .compileComponents();
   });

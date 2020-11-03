@@ -1,6 +1,6 @@
 <div class="mp-course-list">
   <mp-course-item
-    *ngFor="let course of courses"
+    *ngFor="let course of courses | orderBy:'createdAt'; trackBy: trackByCourses"
     [course]="course"
     (courseDelete)="onCourseDelete($event)"
     (courseEdit)="onCourseEdit($event)"

@@ -4,6 +4,7 @@ export interface ICourse {
   createdAt: Date;
   duration: number;
   description: string;
+  topRated: boolean;
 }
 
 export class Course implements ICourse {
@@ -12,6 +13,7 @@ export class Course implements ICourse {
   title: string;
   duration: number;
   description: string;
+  topRated: boolean;
 
   constructor(course: ICourse) {
     this.id = course.id;
@@ -19,5 +21,6 @@ export class Course implements ICourse {
     this.createdAt = course.createdAt;
     this.duration = course.duration;
     this.description = course.description;
+    this.topRated = course.topRated;
   }
 }

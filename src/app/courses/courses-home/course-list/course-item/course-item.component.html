@@ -1,10 +1,20 @@
-<div class="mp-course">
+<div
+  class="mp-course"
+  [mpHighlightFresh]="course.createdAt"
+  [ngClass]="{'mp-course--top-rated': course.topRated}"
+>
   <div class="row">
     <div class="mp-course__info col-10">
       <div class="mp-course__heading">
-        <div class="mp-course__title">{{course.title}}</div>
+        <div class="mp-course__title">
+          {{course.title | uppercase}}
+          <span *ngIf="course.topRated" class="mp-course__top-rated"></span>
+        </div>
+
         <div class="mp-course__time">
-          <div class="mp-course__duration">{{course.duration}} mins</div>
+          <div class="mp-course__duration">
+            {{course.duration | duration}}
+          </div>
           <div class="mp-course__created-at">
             {{course.createdAt | date:'d MMM, y'}}
           </div>

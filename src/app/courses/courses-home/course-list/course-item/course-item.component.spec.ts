@@ -8,6 +8,9 @@ import { Course } from 'app/courses/course.model';
 import { SharedModule } from 'app/shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { click } from 'tests/unit';
+import { DurationPipe } from 'app/shared/pipes/duration.pipe';
+
+const expectedCourse = courses[0];
 
 describe('CourseItemComponent class only', () => {
   let component: CourseItemComponent;
@@ -33,7 +36,6 @@ describe('CourseItemComponent class only', () => {
 describe('CourseItemComponent as component', () => {
   let component: CourseItemComponent;
   let fixture: ComponentFixture<CourseItemComponent>;
-  let expectedCourse: Course;
   let courseDebug: DebugElement;
 
   beforeEach(async () => {
@@ -48,12 +50,9 @@ describe('CourseItemComponent as component', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CourseItemComponent);
     component = fixture.componentInstance;
-    courseDebug = fixture.debugElement.query(By.css('.mp-course'));
-
-    expectedCourse = courses[0];
     component.course = expectedCourse;
-
     fixture.detectChanges();
+    courseDebug = fixture.debugElement.query(By.css('.mp-course'));
   });
 
   it('should create', () => {
@@ -61,13 +60,13 @@ describe('CourseItemComponent as component', () => {
   });
 
   it('should display course title', () => {
-    const expected = expectedCourse.title;
+    const expected = expectedCourse.title.toUpperCase();
     const element = courseDebug.query(By.css('.mp-course__title')).nativeElement;
     expect(element.textContent).toContain(expected);
   });
 
   it('should display course duration', () => {
-    const expected = `${expectedCourse.duration} mins`;
+    const expected = new DurationPipe().transform(component.course.duration);
     const element = courseDebug.query(By.css('.mp-course__duration')).nativeElement;
     expect(element.textContent).toContain(expected);
   });
@@ -113,6 +112,7 @@ describe('CourseItemComponent when inside a test host', () => {
       .configureTestingModule({
         declarations: [ CourseItemComponent, TestHostComponent ],
         schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+        imports: [SharedModule],
       })
       .compileComponents();
   }));
@@ -126,7 +126,7 @@ describe('CourseItemComponent when inside a test host', () => {
 
   it('should display course title', () => {
     const titleElement = courseDebug.query(By.css('.mp-course__title')).nativeElement;
-    const expectedTitle = testHost.course.title;
+    const expectedTitle = testHost.course.title.toUpperCase();
     expect(titleElement.textContent).toContain(expectedTitle);
   });
 
@@ -140,6 +140,7 @@ describe('CourseItemComponent when inside a test host', () => {
   });
 
   it('should raise courseDelete event', () => {
+
     spyOn(testHost, 'onCourseDelete');
 
     const buttonDebug = courseDebug.queryAll(By.css('mp-button'))[1];

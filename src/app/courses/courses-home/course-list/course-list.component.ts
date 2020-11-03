@@ -17,7 +17,7 @@ import { Course } from 'app/courses/course.model';
 @Component({
   selector: 'mp-course-list',
   templateUrl: './course-list.component.html',
-  styleUrls: ['./course-list.component.scss']
+  styleUrls: [ './course-list.component.scss' ]
 })
 export class CourseListComponent implements OnInit,
   OnChanges, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked {
@@ -37,6 +37,9 @@ export class CourseListComponent implements OnInit,
     this.courseEdit.emit(course);
   }
 
+  trackByCourses(index: number, course: Course): string {
+    return course.id;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log('ngOnChanges', changes);
