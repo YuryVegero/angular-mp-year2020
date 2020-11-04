@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AuthModule } from './auth/auth.module';
-import { CoreModule } from './core/core.module';
-import { CoursesModule } from './courses/courses.module';
+import { AuthModule } from './auth';
+import { CoreModule } from './core';
+import { CoursesModule } from './courses';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -18,7 +18,7 @@ import { AppRoutingModule } from './app-routing.module';
     CoursesModule,
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [ AppComponent ],
 })
 export class AppModule {
 }

@@ -1,8 +1,7 @@
 import { HighlightFreshDirective } from './highlight-fresh.directive';
-import { CourseItemComponent } from 'app/courses/courses-home/course-list/course-item';
+import { CourseItemComponent, courses } from 'app/courses';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SharedModule } from 'app/shared/shared.module';
-import { courses } from 'app/courses/course.mock';
+import { SharedModule } from 'app/shared';
 
 const todayDate = new Date(2020, 9, 23);
 const newClassName = 'mp-highlight--new';

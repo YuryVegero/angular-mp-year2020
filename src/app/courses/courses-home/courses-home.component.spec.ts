@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CoursesHomeComponent } from './courses-home.component';
-import { CourseListComponent } from 'app/courses/courses-home/course-list';
-import { courses } from 'app/courses/course.mock';
+import { CoursesHomeComponent, CourseListComponent, courses } from 'app/courses';
 import { By } from '@angular/platform-browser';
-import { SharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 
 describe('CoursesHomeComponent', () => {

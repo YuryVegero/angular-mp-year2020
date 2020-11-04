@@ -1,8 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from './user.model';
-import { LocalStorageService } from 'app/core/services/local-storage.service';
 import { LoginCredentials, UserResponse } from './auth.model';
+import { LocalStorageService } from 'app/core/services/local-storage.service';
 
 @Injectable({
   providedIn: 'root'

@@ -5,10 +5,9 @@ import { CourseItemComponent } from './course-item.component';
 import { courses } from 'app/courses/course.mock';
 import { By } from '@angular/platform-browser';
 import { Course } from 'app/courses/course.model';
-import { SharedModule } from 'app/shared/shared.module';
+import { DurationPipe, SharedModule } from 'app/shared';
 import { DatePipe } from '@angular/common';
 import { click } from 'tests/unit';
-import { DurationPipe } from 'app/shared/pipes/duration.pipe';
 
 const expectedCourse = courses[0];
 
@@ -112,7 +111,7 @@ describe('CourseItemComponent when inside a test host', () => {
       .configureTestingModule({
         declarations: [ CourseItemComponent, TestHostComponent ],
         schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-        imports: [SharedModule],
+        imports: [ SharedModule ],
       })
       .compileComponents();
   }));

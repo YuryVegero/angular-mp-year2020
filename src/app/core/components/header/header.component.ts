@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthService } from 'app/auth/auth.service';
+import { AuthService } from 'app/auth';
 
 @Component({
   selector: 'mp-header',
