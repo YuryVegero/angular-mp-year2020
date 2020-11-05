@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CourseListComponent, courses } from 'app/courses';
+import { CourseListComponent } from './course-list.component';
+import { courses } from 'app/courses/course.mock';
 import { SharedModule } from 'app/shared';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';

@@ -1,5 +1,6 @@
 import { HighlightFreshDirective } from './highlight-fresh.directive';
-import { CourseItemComponent, courses } from 'app/courses';
+import { CourseItemComponent } from 'app/courses';
+import { courses } from 'app/courses/course.mock';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SharedModule } from 'app/shared';
 

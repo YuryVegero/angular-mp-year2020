@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from 'app/courses/course.model';
 import { CourseService } from 'app/courses/course.service';
-import { FilterByPipe } from 'app/shared';
+import { FilterByPipe } from 'app/shared/pipes';
 
 @Component({
   selector: 'mp-courses-home',
