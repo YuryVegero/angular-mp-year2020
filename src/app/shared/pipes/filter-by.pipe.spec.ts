@@ -1,5 +1,5 @@
 import { FilterByPipe } from './filter-by.pipe';
-import { courses } from 'app/courses/courses-home/course.mock';
+import { courses } from 'app/courses/course.mock';
 
 describe('FilterByPipe', () => {
   const pipe = new FilterByPipe();

@@ -1,20 +1,36 @@
 import { TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { AppComponent } from './app.component';
+import { AuthService } from 'app/auth';
 
 describe('AppComponent', () => {
+  let fixture;
+  let appComponent;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
         AppComponent
       ],
+      imports: [ RouterTestingModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+      providers: [
+        AuthService,
+      ],
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    appComponent = fixture.componentInstance;
+  });
+
+  it('should call autoLogin on init', () => {
+    const authService = TestBed.inject(AuthService);
+    spyOn(authService, 'autoLogin');
+    fixture.detectChanges();
+    expect(authService.autoLogin).toHaveBeenCalled();
   });
 });

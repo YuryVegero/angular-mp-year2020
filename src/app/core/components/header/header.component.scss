@@ -1,17 +1,19 @@
 @import 'base';
 
 .mp-header {
+  color: $white;
   background: $background-nav;
 
   &__container {
     display: flex;
     justify-content: space-between;
     padding: 20px 0;
+  }
 
-    > div {
-      display: flex;
-      align-items: center;
-    }
+  &__logo-block {
+    align-items: center;
+    display: flex;
+    text-decoration: none;
   }
 
   &__logo {
@@ -43,5 +45,13 @@
     font-weight: 700;
     margin-left: 10px;
     text-transform: uppercase;
+  }
+
+  &__auth-block {
+    font-size: 14px;
+
+    a {
+      @include link-color($white, $white, $white, $white);
+    }
   }
 }

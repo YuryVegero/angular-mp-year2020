@@ -1,14 +1,11 @@
-import { DebugElement } from '@angular/core';
+// tslint:disable-next-line:no-reference
+/// <reference path="./matchers/to-include-object.d.ts"/>
 
-export const ButtonClickEvents = {
-  left: { button: 0 },
-  right: { button: 2 },
-};
+export * from './utils';
+import { toIncludeObject } from './matchers';
 
-export function click(el: DebugElement | HTMLElement, eventObj: any = ButtonClickEvents.left): void {
-  if (el instanceof HTMLElement) {
-    el.click();
-  } else {
-    el.triggerEventHandler('click', eventObj);
-  }
-}
+jasmine.getEnv().beforeAll(() => {
+  jasmine.addMatchers({
+    toIncludeObject,
+  });
+});

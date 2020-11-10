@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from 'app/courses/course.model';
-import { courses } from 'app/courses/courses-home/course.mock';
-import { FilterByPipe } from 'app/shared/pipes/filter-by.pipe';
+import { CourseService } from 'app/courses/course.service';
+import { FilterByPipe } from 'app/shared/pipes';
 
 @Component({
   selector: 'mp-courses-home',
@@ -15,12 +15,20 @@ export class CoursesHomeComponent implements OnInit {
 
   filteredCourses: Course[] = [];
 
-  constructor(private filterByPipe: FilterByPipe) {
+  constructor(
+    private filterByPipe: FilterByPipe,
+    private courseService: CourseService) {
   }
 
   ngOnInit(): void {
-    this.courses = this.getCourses();
+    this.courses = this.courseService.getAll();
     this.filteredCourses = [ ...this.courses ];
+
+    this.courseService.coursesChanged
+      .subscribe((courses: Course[]) => {
+        this.courses = courses;
+        this.filterCourses();
+      });
   }
 
   hasCourses(): boolean {
@@ -33,15 +41,13 @@ export class CoursesHomeComponent implements OnInit {
   }
 
   onCourseDelete(course: Course): void {
-    console.log(`Delete ${course.id}`);
+    if (confirm(`Are you sure you want to delete "${course.title}"?`)) {
+      this.courseService.delete(course.id);
+    }
   }
 
   onCourseEdit(course: Course): void {
     console.log(`Edit ${course.id}`);
-  }
-
-  private getCourses(): Course[] {
-    return courses;
   }
 
   private filterCourses(): void {

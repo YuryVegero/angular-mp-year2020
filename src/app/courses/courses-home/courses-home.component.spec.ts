@@ -1,27 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 import { CoursesHomeComponent } from './courses-home.component';
-import { CourseListComponent } from 'app/courses/courses-home/course-list';
-import { courses } from 'app/courses/courses-home/course.mock';
-import { By } from '@angular/platform-browser';
-import { SharedModule } from 'app/shared/shared.module';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { CourseListComponent } from './course-list';
+import { courses } from 'app/courses/course.mock';
+import { SharedModule } from 'app/shared';
+import { CourseService } from 'app/courses';
 
 describe('CoursesHomeComponent', () => {
   let component: CoursesHomeComponent;
   let fixture: ComponentFixture<CoursesHomeComponent>;
   let coursesHomeDebug: DebugElement;
+  let courseService: CourseService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ CoursesHomeComponent, CourseListComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       imports: [ SharedModule ],
+      providers: [ CourseService ],
     })
       .compileComponents();
   });
 
   beforeEach(() => {
+    courseService = TestBed.inject(CourseService);
     fixture = TestBed.createComponent(CoursesHomeComponent);
     component = fixture.componentInstance;
     coursesHomeDebug = fixture.debugElement.query(By.css('.mp-courses'));
@@ -32,18 +36,41 @@ describe('CoursesHomeComponent', () => {
   });
 
   it('should set courses on ngInit', () => {
-    const getCoursesSpy = spyOn<any>(component, 'getCourses').and.returnValue(courses);
+    const serviceGetAllSpy = spyOn(courseService, 'getAll').and.returnValue(courses);
     expect(component.filteredCourses.length).toBe(0);
     fixture.detectChanges();
-    expect(getCoursesSpy).toHaveBeenCalled();
+
+    expect(serviceGetAllSpy).toHaveBeenCalled();
     expect(component.filteredCourses.length).not.toBe(0);
   });
 
-  it('should log on onCourseDelete fn call', () => {
-    spyOn(console, 'log');
-    component.onCourseDelete(courses[0]);
-    expect(console.log).toHaveBeenCalled();
+  describe('should test onCourseDelete fn', () => {
+    let confirmSpy;
+
+    beforeEach(() => {
+      confirmSpy = spyOn(window, 'confirm');
+    });
+
+    it('should ask delete confirmation when called', () => {
+      component.onCourseDelete(courses[0]);
+      expect(confirmSpy).toHaveBeenCalled();
+    });
+
+    it('should call courseService.delete fn if confirmed', () => {
+      confirmSpy.and.returnValue(true);
+      const serviceDeleteSpy = spyOn(courseService, 'delete');
+      component.onCourseDelete(courses[0]);
+      expect(serviceDeleteSpy).toHaveBeenCalledWith(courses[0].id);
+    });
+
+    it('should not call courseService.delete fn if not confirmed', () => {
+      confirmSpy.and.returnValue(false);
+      const serviceDeleteSpy = spyOn(courseService, 'delete');
+      component.onCourseDelete(courses[0]);
+      expect(serviceDeleteSpy).not.toHaveBeenCalled();
+    });
   });
+
 
   it('should call onCourseDelete fn on courseDelete event', () => {
     fixture.detectChanges();

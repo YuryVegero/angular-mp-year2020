@@ -4,6 +4,9 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
+    files: [
+      { pattern: 'src/tests/unit/index.ts', type: 'js' }
+    ],
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
