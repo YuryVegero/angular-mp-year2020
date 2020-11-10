@@ -8,12 +8,12 @@
     display: flex;
     justify-content: space-between;
     padding: 20px 0;
+  }
 
-    > a {
-      align-items: center;
-      display: flex;
-      text-decoration: none;
-    }
+  &__logo-block {
+    align-items: center;
+    display: flex;
+    text-decoration: none;
   }
 
   &__logo {

@@ -1,7 +1,7 @@
 <header class="mp-header">
   <div class="container">
     <div class="mp-header__container">
-      <a routerLink="/" href="javascript:void(0);">
+      <a class="mp-header__logo-block" routerLink="/">
         <div class="mp-header__logo"></div>
         <span class="mp-header__title">Video course</span>
       </a>
@@ -15,7 +15,7 @@
         </ng-container>
 
         <ng-template #notAuth>
-          <a routerLink="/login" class="mp-header__login-btn" href="javascript:void(0);">
+          <a routerLink="/login" class="mp-header__login-btn">
             Log in
           </a>
         </ng-template>
