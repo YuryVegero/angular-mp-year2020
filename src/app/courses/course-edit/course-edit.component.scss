@@ -1,0 +1,20 @@
+.mp-course-edit {
+  &__content {
+    background: #F5F6FA;
+    padding: 20px 0;
+
+    .form-group {
+      label {
+        display: block;
+      }
+    }
+  }
+
+  &__buttons {
+    text-align: end;
+
+    > button {
+      margin-left: 10px;
+    }
+  }
+}

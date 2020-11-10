@@ -1,19 +1,19 @@
 export interface ICourse {
-  id: string;
+  id?: string;
   title: string;
   createdAt: Date;
   duration: number;
   description: string;
-  topRated: boolean;
+  topRated?: boolean;
 }
 
 export class Course implements ICourse {
   createdAt: Date;
-  id: string;
+  id?: string;
   title: string;
   duration: number;
   description: string;
-  topRated: boolean;
+  topRated?: boolean;
 
   constructor(course: ICourse) {
     this.id = course.id;
