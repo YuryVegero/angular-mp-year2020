@@ -23,8 +23,8 @@ export class CourseService {
     return [ ...this.courses ];
   }
 
-  update(id, course: Course): Course {
-    const index = this.courses.findIndex(courseItem => courseItem.id === id);
+  update(course: Course): Course {
+    const index = this.courses.findIndex(courseItem => courseItem.id === course.id);
     const newCourse: Course = { ...this.courses[index], ...course };
     this.courses.splice(index, 1, newCourse);
     this.courses = [ ...this.courses ];

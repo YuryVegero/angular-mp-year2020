@@ -10,12 +10,14 @@ import { Course } from 'app/courses/course.model';
 })
 export class CourseEditComponent implements OnInit {
   editMode = false;
-  id: string;
-  title = '';
-  description = '';
-  authors = '';
-  duration: number;
-  date: Date;
+  course = new Course({
+    id: '',
+    title: '',
+    duration: 0,
+    description: '',
+    authors: '',
+    createdAt: null,
+  });
 
   constructor(
     private route: ActivatedRoute,
@@ -26,25 +28,17 @@ export class CourseEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(({ id }: Params) => {
-      this.id = id;
-      this.editMode = id != null;
+      this.course.id = id;
+      this.editMode = !!id;
       this.initForm();
     });
   }
 
   onSaveClick(): void {
-    const course = new Course({
-      id: this.id,
-      title: this.title,
-      description: this.description,
-      duration: this.duration,
-      createdAt: this.date,
-    });
-
     if (this.editMode) {
-      this.courseService.update(this.id, course);
+      this.courseService.update(this.course);
     } else {
-      this.courseService.add(course);
+      this.courseService.add(this.course);
     }
     this.onCancelClick();
   }
@@ -55,12 +49,7 @@ export class CourseEditComponent implements OnInit {
 
   private initForm(): void {
     if (this.editMode) {
-      const course = this.courseService.get(this.id);
-      this.title = course.title;
-      this.description = course.description;
-      this.authors = '';
-      this.duration = course.duration;
-      this.date = course.createdAt;
+      this.course = this.courseService.get(this.course.id);
     }
   }
 }

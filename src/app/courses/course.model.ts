@@ -4,6 +4,7 @@ export interface ICourse {
   createdAt: Date;
   duration: number;
   description: string;
+  authors: string;
   topRated?: boolean;
 }
 
@@ -13,6 +14,7 @@ export class Course implements ICourse {
   title: string;
   duration: number;
   description: string;
+  authors: string;
   topRated?: boolean;
 
   constructor(course: ICourse) {
@@ -21,6 +23,7 @@ export class Course implements ICourse {
     this.createdAt = course.createdAt;
     this.duration = course.duration;
     this.description = course.description;
+    this.authors = course.authors;
     this.topRated = course.topRated;
   }
 }
