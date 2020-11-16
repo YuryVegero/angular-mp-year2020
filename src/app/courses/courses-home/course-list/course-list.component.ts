@@ -4,53 +4,78 @@ import {
   AfterViewChecked,
   AfterViewInit,
   Component,
-  DoCheck,
-  EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import { Course } from 'app/courses/course.model';
+import { FilterByPipe } from 'app/shared/pipes';
+import { CourseService } from 'app/courses/course.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'mp-course-list',
   templateUrl: './course-list.component.html',
-  styleUrls: [ './course-list.component.scss' ]
+  styleUrls: [ './course-list.component.scss' ],
+  providers: [ FilterByPipe ],
 })
 export class CourseListComponent implements OnInit,
-  OnChanges, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked {
-  @Input() courses: Course[];
-  @Output() courseDelete = new EventEmitter<Course>();
-  @Output() courseEdit = new EventEmitter<Course>();
+  OnChanges, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked {
+  @Input() searchTerm = '';
 
-  constructor() {
-    // console.log('constructor');
+  private courses: Course[] = [];
+  public filteredCourses: Course[] = [];
+
+  constructor(
+    private filterByPipe: FilterByPipe,
+    private courseService: CourseService,
+    private router: Router,
+  ) {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes.searchTerm.firstChange) {
+      this.filterCourses();
+    }
+  }
+
+  ngOnInit(): void {
+    this.courses = this.courseService.getAll();
+    this.filterCourses();
+
+    this.courseService.coursesChanged
+      .subscribe((courses: Course[]) => {
+        this.courses = courses;
+        this.filterCourses();
+      });
   }
 
   onCourseDelete(course: Course): void {
-    this.courseDelete.emit(course);
+    if (confirm(`Are you sure you want to delete "${course.title}"?`)) {
+      this.courseService.delete(course.id);
+    }
   }
 
   onCourseEdit(course: Course): void {
-    this.courseEdit.emit(course);
+    this.router.navigateByUrl(`courses/${course.id}/edit`);
+  }
+
+  onLoadMoreClick(): void {
+    console.log('Load more clicked');
+  }
+
+  hasCourses(): boolean {
+    return this.filteredCourses && this.filteredCourses.length > 0;
   }
 
   trackByCourses(index: number, course: Course): string {
     return course.id;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log('ngOnChanges', changes);
-  }
-
-  ngOnInit(): void {
-    // console.log('ngOnInit');
-  }
-
-  ngDoCheck(): void {
-    // console.log('ngDoCheck');
+  private filterCourses(): void {
+    this.filteredCourses = this.filterByPipe.transform(this.courses, 'title', this.searchTerm);
   }
 
   ngAfterContentInit(): void {

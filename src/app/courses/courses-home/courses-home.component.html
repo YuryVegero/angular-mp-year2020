@@ -4,18 +4,7 @@
     <div class="container">
       <mp-search-course (courseSearch)="onCourseSearch($event)"></mp-search-course>
       <mp-add-course></mp-add-course>
-
-      <div *ngIf="!hasCourses(); else notEmpty">
-        No data. Feel free to add a new course.
-      </div>
-      <ng-template #notEmpty>
-        <mp-course-list
-          [courses]="filteredCourses"
-          (courseDelete)="onCourseDelete($event)"
-          (courseEdit)="onCourseEdit($event)"
-        ></mp-course-list>
-        <mp-load-more></mp-load-more>
-      </ng-template>
+      <mp-course-list [searchTerm]="searchTerm"></mp-course-list>
     </div>
   </div>
 </div>

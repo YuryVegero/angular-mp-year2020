@@ -6,19 +6,19 @@ import {
   CourseItemComponent,
   AddCourseComponent,
   SearchCourseComponent,
-  LoadMoreComponent,
 } from './courses-home';
+import { CourseEditComponent } from './course-edit';
 import { CoursesRoutingModule } from './courses-routing.module';
 import { CourseService } from './course.service';
 
 @NgModule({
   declarations: [
+    CourseEditComponent,
     CoursesHomeComponent,
     CourseListComponent,
     CourseItemComponent,
     AddCourseComponent,
     SearchCourseComponent,
-    LoadMoreComponent,
   ],
   imports: [
     CoursesRoutingModule,

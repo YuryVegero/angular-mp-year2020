@@ -107,7 +107,9 @@
             },
             "scripts": [],
             "codeCoverageExclude": [
-              "src/tests/**"
+              "src/tests/**",
+              "src/app/courses/course.service.ts",
+              "src/app/courses/courses-home/add-course/**"
             ]
           }
         },

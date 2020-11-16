@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from './components/breadcrumb';
 import { ButtonComponent } from './components/button/button.component';
 import { HighlightFreshDirective } from './directives/highlight-fresh.directive';
+import { DateInputDirective } from './directives/date-input.directive';
 import { DurationPipe } from './pipes/duration.pipe';
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { FilterByPipe } from './pipes/filter-by.pipe';
@@ -13,6 +14,7 @@ import { FilterByPipe } from './pipes/filter-by.pipe';
     BreadcrumbComponent,
     ButtonComponent,
     HighlightFreshDirective,
+    DateInputDirective,
     DurationPipe,
     OrderByPipe,
     FilterByPipe,
@@ -30,6 +32,7 @@ import { FilterByPipe } from './pipes/filter-by.pipe';
     DurationPipe,
     OrderByPipe,
     FilterByPipe,
+    DateInputDirective,
   ]
 })
 export class SharedModule {

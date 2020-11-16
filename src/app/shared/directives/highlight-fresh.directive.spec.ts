@@ -1,16 +1,15 @@
 import { HighlightFreshDirective } from './highlight-fresh.directive';
-import { CourseItemComponent } from 'app/courses';
-import { courses } from 'app/courses/course.mock';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SharedModule } from 'app/shared';
+import { Component } from '@angular/core';
 
 const todayDate = new Date(2020, 9, 23);
 const newClassName = 'mp-highlight--new';
 const futureClassName = 'mp-highlight--future';
 
 describe('HighlightFreshDirective', () => {
-  let component: CourseItemComponent;
-  let fixture: ComponentFixture<CourseItemComponent>;
+  let component: TestDirectiveComponent;
+  let fixture: ComponentFixture<TestDirectiveComponent>;
 
   beforeAll(() => {
     jasmine.clock().install();
@@ -23,52 +22,60 @@ describe('HighlightFreshDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CourseItemComponent, HighlightFreshDirective ],
+      declarations: [ HighlightFreshDirective, TestDirectiveComponent ],
       imports: [ SharedModule ]
     })
       .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CourseItemComponent);
+    fixture = TestBed.createComponent(TestDirectiveComponent);
     component = fixture.componentInstance;
-    component.course = courses[0];
+    component.date = new Date();
   });
 
-  it(`should add the "${futureClassName}" css class for a future date course`, () => {
-    component.course.createdAt = new Date(2020, 9, 24);
+  it(`should add the "${futureClassName}" css class for a future date`, () => {
+    component.date = new Date(2020, 9, 24);
     fixture.detectChanges();
-    const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-    expect(courseEl.classList).toContain(futureClassName);
+    const el: HTMLElement = fixture.nativeElement.querySelector('div');
+    expect(el.classList).toContain(futureClassName);
   });
 
-  describe(`should add the "${newClassName}" for a course within 2 weeks until today`, () => {
+  describe(`should add the "${newClassName}" class if date is within 2 weeks until today`, () => {
     it('1 day before today', () => {
-      component.course.createdAt = new Date(2020, 9, 22);
+      component.date = new Date(2020, 9, 22);
       fixture.detectChanges();
-      const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-      expect(courseEl.classList).toContain(newClassName);
+      const el: HTMLElement = fixture.nativeElement.querySelector('div');
+      expect(el.classList).toContain(newClassName);
     });
 
     it('14 days before today', () => {
-      component.course.createdAt = new Date(2020, 9, 9);
+      component.date = new Date(2020, 9, 9);
       fixture.detectChanges();
-      const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-      expect(courseEl.classList).toContain(newClassName);
+      const el: HTMLElement = fixture.nativeElement.querySelector('div');
+      expect(el.classList).toContain(newClassName);
     });
 
     it('15 days before today', () => {
-      component.course.createdAt = new Date(2020, 9, 8);
+      component.date = new Date(2020, 9, 8);
       fixture.detectChanges();
-      const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-      expect(courseEl.classList).not.toContain(newClassName);
+      const el: HTMLElement = fixture.nativeElement.querySelector('div');
+      expect(el.classList).not.toContain(newClassName);
     });
   });
 
   it('should not have border', () => {
-    component.course.createdAt = new Date(2020, 8, 1);
+    component.date = new Date(2020, 8, 1);
     fixture.detectChanges();
-    const courseEl: HTMLElement = fixture.nativeElement.querySelector('.mp-course');
-    expect(courseEl.style.border).toBe('');
+    const el: HTMLElement = fixture.nativeElement.querySelector('div');
+    expect(el.style.border).toBe('');
   });
 });
+
+@Component({
+  selector: 'mp-test-directive',
+  template: '<div [mpHighlightFresh]="date"></div>',
+})
+class TestDirectiveComponent {
+  date: Date;
+}
