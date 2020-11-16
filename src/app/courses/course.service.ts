@@ -11,7 +11,6 @@ export class CourseService {
   add(course: Course): Course {
     const newCourse: Course = { ...course, id: `${Date.now()}` };
     this.courses = [ ...this.courses, newCourse ];
-    this.coursesChanged.emit([ ...this.courses ]);
     return newCourse;
   }
 
@@ -28,7 +27,6 @@ export class CourseService {
     const newCourse: Course = { ...this.courses[index], ...course };
     this.courses.splice(index, 1, newCourse);
     this.courses = [ ...this.courses ];
-    this.coursesChanged.emit([ ...this.courses ]);
     return newCourse;
   }
 
