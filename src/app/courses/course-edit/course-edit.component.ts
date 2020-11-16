@@ -10,6 +10,7 @@ import { Course } from 'app/courses/course.model';
 })
 export class CourseEditComponent implements OnInit {
   editMode = false;
+  breadcrumbLabel: string;
   course = new Course({
     id: '',
     title: '',
@@ -30,7 +31,18 @@ export class CourseEditComponent implements OnInit {
     this.route.params.subscribe(({ id }: Params) => {
       this.course.id = id;
       this.editMode = !!id;
-      this.initForm();
+
+      if (this.editMode) {
+        const course = this.courseService.get(this.course.id);
+        if (!course) {
+          this.router.navigateByUrl('/not-found');
+          return;
+        }
+
+        this.course = course;
+        this.breadcrumbLabel = `Edit "${this.course.title}"`;
+        this.initForm(this.course);
+      }
     });
   }
 
@@ -44,12 +56,10 @@ export class CourseEditComponent implements OnInit {
   }
 
   onCancelClick(): void {
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/courses');
   }
 
-  private initForm(): void {
-    if (this.editMode) {
-      this.course = this.courseService.get(this.course.id);
-    }
+  private initForm(course: Course): void {
+    // init form
   }
 }

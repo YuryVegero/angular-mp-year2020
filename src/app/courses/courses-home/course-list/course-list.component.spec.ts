@@ -121,12 +121,6 @@ describe('CourseListComponent as component', () => {
       });
     });
 
-    it('#onCourseEdit: should navigate to "courses/:id/edit"', () => {
-      spyOn(routerService, 'navigateByUrl');
-      component.onCourseEdit(courses[0]);
-      expect(routerService.navigateByUrl).toHaveBeenCalledWith(`courses/${courses[0].id}/edit`);
-    });
-
     describe('#hasCourses ', () => {
       it('should return true if there are filteredCourses', () => {
         component.filteredCourses = courses;
@@ -154,16 +148,6 @@ describe('CourseListComponent as component', () => {
       courseItemDebug.triggerEventHandler('courseDelete', expectedCourse);
 
       expect(component.onCourseDelete).toHaveBeenCalledWith(expectedCourse);
-    });
-
-    it('$courseEdit: should call #onCourseEdit', () => {
-      fixture.detectChanges();
-      spyOn(component, 'onCourseEdit');
-
-      const courseItemDebug = componentDebug.query(By.css('mp-course-item'));
-      courseItemDebug.triggerEventHandler('courseEdit', expectedCourse);
-
-      expect(component.onCourseEdit).toHaveBeenCalledWith(expectedCourse);
     });
 
     it('$click: should call onLoadMoreClick', () => {

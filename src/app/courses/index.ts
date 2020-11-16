@@ -1,4 +1,5 @@
 export * from './courses.module';
+export * from './courses.component';
 export * from './courses-home';
 export * from './course-edit';
 export * from './course.model';

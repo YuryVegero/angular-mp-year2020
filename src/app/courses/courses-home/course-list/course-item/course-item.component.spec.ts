@@ -19,15 +19,10 @@ describe('CourseItemComponent class only', () => {
     component.course = courses[0];
   });
 
-  it('should emit the courseEdit event when calling the onEditClick fn', () => {
-    spyOn(component.courseEdit, 'emit');
-    component.onEditClick();
-    expect(component.courseEdit.emit).toHaveBeenCalledWith(component.course);
-  });
-
   it('should emit the courseDelete event when calling the onDeleteClick fn', () => {
     spyOn(component.courseDelete, 'emit');
-    component.onDeleteClick();
+    const event = new MouseEvent('dxcontextmenu', { bubbles: true });
+    component.onDeleteClick(event);
     expect(component.courseDelete.emit).toHaveBeenCalledWith(component.course);
   });
 });
@@ -82,19 +77,10 @@ describe('CourseItemComponent as component', () => {
     expect(element.textContent).toContain(expected);
   });
 
-  it('should call onEditClick fn on clicked event on the Edit button', () => {
-    spyOn(component, 'onEditClick');
-
-    const buttonDebug = courseDebug.query(By.css('mp-button'));
-    click(buttonDebug);
-
-    expect(component.onEditClick).toHaveBeenCalled();
-  });
-
   it('should call onDeleteClick fn on click event on the Delete button', () => {
     spyOn(component, 'onDeleteClick');
 
-    const buttonDebug = courseDebug.queryAll(By.css('mp-button'))[1];
+    const buttonDebug = courseDebug.query(By.css('button.btn-primary'));
     click(buttonDebug);
 
     expect(component.onDeleteClick).toHaveBeenCalled();
@@ -129,20 +115,11 @@ describe('CourseItemComponent when inside a test host', () => {
     expect(titleElement.textContent).toContain(expectedTitle);
   });
 
-  it('should raise courseEdit event', () => {
-    spyOn(testHost, 'onCourseEdit');
-
-    const buttonDebug = courseDebug.query(By.css('mp-button'));
-    click(buttonDebug);
-
-    expect(testHost.onCourseEdit).toHaveBeenCalledWith(testHost.course);
-  });
-
   it('should raise courseDelete event', () => {
 
     spyOn(testHost, 'onCourseDelete');
 
-    const buttonDebug = courseDebug.queryAll(By.css('mp-button'))[1];
+    const buttonDebug = courseDebug.query(By.css('button.btn-primary'));
     click(buttonDebug);
 
     expect(testHost.onCourseDelete).toHaveBeenCalledWith(testHost.course);
@@ -150,21 +127,11 @@ describe('CourseItemComponent when inside a test host', () => {
 });
 
 @Component({
-  template: `
-      <mp-course-item
-              [course]="course"
-              (courseDelete)="onCourseDelete($event)"
-              (courseEdit)="onCourseEdit($event)"
-      >
-      </mp-course-item>
-  `
+  template: `<mp-course-item [course]="course" (courseDelete)="onCourseDelete($event)"></mp-course-item>`
 })
 class TestHostComponent {
   course: Course = courses[0];
 
   onCourseDelete(deletedCourse: Course): void {
-  }
-
-  onCourseEdit(editedCourse: Course): void {
   }
 }

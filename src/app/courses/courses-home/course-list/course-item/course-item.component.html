@@ -1,5 +1,6 @@
-<div
+<a
   class="mp-course"
+  [routerLink]="[course.id]"
   [mpHighlightFresh]="course.createdAt"
   [ngClass]="{'mp-course--top-rated': course.topRated}"
 >
@@ -23,8 +24,8 @@
       <div class="mp-course__description">{{course.description}}</div>
     </div>
     <div class="mp-course__controls col-2">
-      <mp-button (click)="onEditClick()">Edit</mp-button>
-      <mp-button (click)="onDeleteClick()">Delete</mp-button>
+      <a [routerLink]="[course.id,'edit']" class="btn btn-primary">Edit</a>
+      <button (click)="onDeleteClick($event)" class="btn btn-primary">Delete</button>
     </div>
   </div>
-</div>
+</a>
