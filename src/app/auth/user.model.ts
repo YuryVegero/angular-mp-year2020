@@ -1,16 +1,10 @@
-export interface IUser {
+export interface User {
   id: string;
-  email: string;
-}
-
-export class User implements IUser {
-  constructor(
-    public id: string,
-    public email: string,
-    private token?: string) {
-  }
-
-  get accessToken(): string {
-    return this.token;
-  }
+  fakeToken: string;
+  name: {
+    first: string,
+    last: string,
+  };
+  login: string;
+  password: string;
 }

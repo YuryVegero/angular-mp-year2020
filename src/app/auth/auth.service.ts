@@ -1,73 +1,72 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from './user.model';
-import { LoginCredentials, UserResponse } from './auth.model';
-import { LocalStorageService } from 'app/core/services/local-storage.service';
+import { User } from 'app/auth/user.model';
+import { LoginRequest, Token } from 'app/auth/auth.model';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
+import { TokenService } from 'app/auth/token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  public userChanged = new EventEmitter<User>();
+  private authPrefix = '/auth';
 
-  private currentUser: User;
+  private userSubject = new BehaviorSubject<User>({} as User);
+  public user$ = this.userSubject.asObservable();
+
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
-    private storage: LocalStorageService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
+    private tokenService: TokenService,
   ) {
+    this.fetchUser = this.fetchUser.bind(this);
+    this.setAuth = this.setAuth.bind(this);
   }
 
-  login({ email, password }: LoginCredentials): User {
-    // sign in api call goes here
-    const response: UserResponse = {
-      email,
-      id: Date.now().toString(),
-      token: 'token',
-    };
-    return this.saveUser(response);
+  login(credentials: LoginRequest): Observable<User> {
+    return this.http.post<Token>(`${this.authPrefix}/login`, credentials)
+      .pipe(
+        tap(({ token }) => {
+          this.tokenService.saveToken(token);
+        }),
+        mergeMap(this.fetchUser),
+      );
   }
 
-  logout(): boolean {
-    this.saveUser();
+  logout(): void {
+    this.clearAuth();
     this.router.navigateByUrl('/login');
-    return true;
   }
 
   autoLogin(): void {
-    const loadedUser: User = this.loadUser();
-    if (loadedUser?.accessToken) {
-      this.currentUser = loadedUser;
-      this.userChanged.emit(this.currentUser);
+    const token = this.tokenService.getToken();
+    if (token) {
+      this.fetchUser({ token } as Token)
+        .subscribe(
+          this.setAuth,
+          this.clearAuth,
+        );
     }
   }
 
-  isAuthenticated(): boolean {
-    return !!this.currentUser;
+  private fetchUser(token: Token): Observable<User> {
+    return this.http.post<User>(`${this.authPrefix}/userinfo`, token)
+      .pipe(tap(this.setAuth));
   }
 
-  getCurrentUser(): User {
-    return this.currentUser;
+  private setAuth(user: User): void {
+    this.userSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
   }
 
-  private saveUser(userData?: UserResponse): User {
-    if (userData) {
-      this.currentUser = Object.freeze(new User(userData.id, userData.email, userData.token));
-      this.storage.set('user', this.currentUser);
-    } else {
-      this.currentUser = null;
-      this.storage.remove('user');
-    }
-
-    this.userChanged.emit(this.currentUser);
-    return this.currentUser;
-  }
-
-  private loadUser(): User {
-    const userData: UserResponse = this.storage.get('user');
-    if (userData) {
-      return Object.freeze(new User(userData.id, userData.email, userData.token));
-    }
-    return null;
+  private clearAuth(): void {
+    this.tokenService.clearToken();
+    this.userSubject.next({} as User);
+    this.isAuthenticatedSubject.next(false);
   }
 }

@@ -5,70 +5,74 @@ import {
   AfterViewInit,
   Component,
   Input,
-  OnChanges,
+  OnChanges, OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { Course } from 'app/courses/course.model';
-import { FilterByPipe } from 'app/shared/pipes';
+import { Course, ICourse } from 'app/courses/course.model';
 import { CourseService } from 'app/courses/course.service';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'mp-course-list',
   templateUrl: './course-list.component.html',
   styleUrls: [ './course-list.component.scss' ],
-  providers: [ FilterByPipe ],
 })
-export class CourseListComponent implements OnInit,
+export class CourseListComponent implements OnInit, OnDestroy,
   OnChanges, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked {
+  private deleteSub: Subscription;
+  private COURSES_PER_PAGE = 5;
+  private page = 0;
+  private count = this.COURSES_PER_PAGE;
+
   @Input() searchTerm = '';
 
-  private courses: Course[] = [];
-  public filteredCourses: Course[] = [];
+  public courses$: Observable<ICourse[]>;
 
-  constructor(
-    private filterByPipe: FilterByPipe,
-    private courseService: CourseService,
-  ) {
+  constructor(private courseService: CourseService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes.searchTerm.firstChange) {
-      this.filterCourses();
+      this.count = this.COURSES_PER_PAGE;
+      this.courses$ = this.fetchCourses();
     }
   }
 
   ngOnInit(): void {
-    this.courses = this.courseService.getAll();
-    this.filterCourses();
-
-    this.courseService.coursesChanged
-      .subscribe((courses: Course[]) => {
-        this.courses = courses;
-        this.filterCourses();
-      });
+    this.courses$ = this.fetchCourses();
   }
 
   onCourseDelete(course: Course): void {
-    if (confirm(`Are you sure you want to delete "${course.title}"?`)) {
-      this.courseService.delete(course.id);
+    if (confirm(`Are you sure you want to delete "${course.name}"?`)) {
+      this.deleteSub = this.courseService.delete(course.id)
+        .subscribe(() => {
+          this.courses$ = this.fetchCourses();
+        });
     }
   }
 
-  onLoadMoreClick(): void {
-    console.log('Load more clicked');
+  private fetchCourses(options = {}): Observable<ICourse[]> {
+    const params: any = {
+      start: this.page,
+      count: this.count,
+      ...options,
+    };
+
+    if (this.searchTerm) {
+      params.term = this.searchTerm;
+    }
+
+    return this.courseService.getAll(params);
   }
 
-  hasCourses(): boolean {
-    return this.filteredCourses && this.filteredCourses.length > 0;
+  onLoadMoreClick(): void {
+    this.count += this.COURSES_PER_PAGE;
+    this.courses$ = this.fetchCourses();
   }
 
   trackByCourses(index: number, course: Course): string {
     return course.id;
-  }
-
-  private filterCourses(): void {
-    this.filteredCourses = this.filterByPipe.transform(this.courses, 'title', this.searchTerm);
   }
 
   ngAfterContentInit(): void {
@@ -85,5 +89,11 @@ export class CourseListComponent implements OnInit,
 
   ngAfterViewChecked(): void {
     // console.log('ngAfterViewChecked');
+  }
+
+  ngOnDestroy(): void {
+    if (this.deleteSub) {
+      this.deleteSub.unsubscribe();
+    }
   }
 }

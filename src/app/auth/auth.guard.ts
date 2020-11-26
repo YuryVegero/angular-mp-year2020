@@ -12,6 +12,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,12 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
     return this.canActivate(route, state);
   }
 
-  private checkAccess(): boolean | UrlTree {
-    return this.authService.isAuthenticated() ? true : this.router.parseUrl('/login');
+  private checkAccess(): Observable<boolean | UrlTree> {
+    return this.authService.isAuthenticated$
+      .pipe(
+        map((isAuthenticated) => {
+          return isAuthenticated ? true : this.router.parseUrl('/login');
+        }),
+      );
   }
 }

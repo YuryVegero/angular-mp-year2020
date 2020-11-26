@@ -7,7 +7,7 @@
       </a>
 
       <div *ngIf="authBlockVisible" class="mp-header__auth-block">
-        <ng-container *ngIf="authenticated; else notAuth">
+        <ng-container *ngIf="(authenticated$ | async); else notAuth">
           <span>{{userLogin}} |</span>
           <a (click)="logout()" class="mp-header__logout-btn" href="javascript:void(0);">
             Log out

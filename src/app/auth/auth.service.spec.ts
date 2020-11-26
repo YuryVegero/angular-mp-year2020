@@ -1,101 +1,107 @@
 import { AuthService } from './auth.service';
-import { LocalStorageService } from 'app/core/services';
+import { Router } from '@angular/router';
+import { TokenService } from 'app/auth/token.service';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { userMock } from 'tests/unit/mocks/user.mock';
 import { User } from 'app/auth/user.model';
+import { of } from 'rxjs';
 
 describe('AuthService', () => {
-  let service: AuthService;
-  let routerServiceSpy;
-  let storageServiceSpy;
+  let httpTestingController: HttpTestingController;
+  let authService: AuthService;
+  let routerServiceSpy: jasmine.SpyObj<Router>;
+  let tokenServiceSpy: jasmine.SpyObj<TokenService>;
 
   beforeEach(() => {
-    routerServiceSpy = jasmine.createSpyObj('Router', [ 'navigateByUrl' ]);
-    storageServiceSpy = jasmine.createSpyObj('LocalStorageService', [ 'set', 'get', 'remove' ]);
-    service = new AuthService(storageServiceSpy, routerServiceSpy);
+    const fakeRouterService = jasmine.createSpyObj('Router', [ 'navigateByUrl' ]);
+    const fakeTokenService = jasmine.createSpyObj('TokenService', [ 'saveToken', 'getToken', 'clearToken' ]);
+
+    TestBed.configureTestingModule({
+      providers: [
+        AuthService,
+        { provide: Router, useValue: fakeRouterService },
+        { provide: TokenService, useValue: fakeTokenService },
+      ],
+      imports: [ HttpClientTestingModule ],
+    });
+
+    authService = TestBed.inject(AuthService);
+    routerServiceSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    tokenServiceSpy = TestBed.inject(TokenService) as jasmine.SpyObj<TokenService>;
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(authService).toBeTruthy();
   });
 
   describe('#login', () => {
-    it('should call saveUser fn and return a new user', () => {
-      const saveUserSpy = spyOn<any>(service, 'saveUser').and.returnValue({});
-      const loggedInUser = service.login({ email: '', password: '' });
-      expect(saveUserSpy).toHaveBeenCalled();
-      expect(loggedInUser).toBeDefined();
+    it('should send POST req to proper endpoint', () => {
+      spyOn<any>(authService, 'fetchUser').and.returnValue(of(userMock));
+      authService.login({ login: 'a', password: 'a' })
+        .subscribe((user) => {
+          expect(user).toEqual(userMock);
+        });
+
+      const req = httpTestingController.expectOne('/auth/login');
+      expect(req.request.method).toBe('POST');
+
+      req.flush(userMock);
     });
 
-    it('private saveUser should set the user to storage and emit the user', () => {
-      const email = 'email';
-      const password = 'password';
+    it('should call tokenService.saveToken and fetchUser if request is successful', () => {
+      const fetchUserSpy = spyOn<any>(authService, 'fetchUser').and.returnValue(of());
 
-      service.userChanged.subscribe((newUser) => {
-        expect(newUser).toEqual(jasmine.objectContaining({ email }));
-      });
+      authService.login({ login: 'login', password: 'password' })
+        .subscribe(() => {
+          expect(tokenServiceSpy.saveToken).toHaveBeenCalled();
+          expect(fetchUserSpy).toHaveBeenCalled();
+        });
 
-      service.login({ email, password });
-      expect(storageServiceSpy.set).toHaveBeenCalled();
+      const req = httpTestingController.expectOne('/auth/login');
+      req.flush(userMock);
+    });
+
+    afterEach(() => {
+      httpTestingController.verify();
     });
   });
 
-  describe('#logout', () => {
-    it('should call saveUser fn and navigate to "/login"', () => {
-      const saveUserSpy = spyOn<any>(service, 'saveUser');
 
-      service.logout();
-      expect(saveUserSpy).toHaveBeenCalledWith();
+  describe('#logout', () => {
+    it('should call clearAuth fn and navigate to "/login"', () => {
+      const clearAuthSpy = spyOn<any>(authService, 'clearAuth');
+
+      authService.logout();
+      expect(clearAuthSpy).toHaveBeenCalledWith();
       expect(routerServiceSpy.navigateByUrl).toHaveBeenCalledWith('/login');
     });
 
-    it('private saveUser should remove user from storage and emit null', () => {
-      service.userChanged.subscribe((newUser) => {
-        expect(newUser).toBeNull();
+    it('private clearAuth should call tokenServiceSpy.clearToken, update user$ and isAuthenticated$', () => {
+      authService.isAuthenticated$.subscribe((isAuth) => {
+        expect(isAuth).toBeFalse();
       });
-
-      service.logout();
-      expect(storageServiceSpy.remove).toHaveBeenCalled();
+      authService.user$.subscribe((user) => {
+        expect(user).toEqual({} as User);
+      });
+      authService.logout();
+      expect(tokenServiceSpy.clearToken).toHaveBeenCalled();
     });
   });
 
   describe('#autoLogin', () => {
-    it('should call loadUser fn', () => {
-      const loadUserSpy = spyOn<any>(service, 'loadUser');
-      service.autoLogin();
-      expect(loadUserSpy).toHaveBeenCalled();
+    it('should call tokenService.getToken', () => {
+      authService.autoLogin();
+      expect(tokenServiceSpy.getToken).toHaveBeenCalled();
     });
 
-    it('should set and emit the loaded user if has accessToken', () => {
-      const user = new User('1', 'test@gmail.com', 'token');
-      spyOn<any>(service, 'loadUser').and.returnValue(user);
-
-      service.userChanged.subscribe((newUser) => {
-        expect(newUser).toEqual(user);
-      });
-      service.autoLogin();
-      expect(service.getCurrentUser()).toEqual(user);
+    it('should call fetchUser and setAuth if token exists', () => {
+      tokenServiceSpy.getToken.and.returnValue('token');
+      const fetchUserSpy = spyOn<any>(authService, 'fetchUser').and.returnValue(of());
+      authService.autoLogin();
+      expect(fetchUserSpy).toHaveBeenCalledWith({ token: 'token' });
     });
-
-    it('should not set and emit the loaded user if has no accessToken', () => {
-      spyOn<any>(service, 'loadUser');
-      spyOn(service.userChanged, 'emit');
-
-      service.autoLogin();
-      expect(service.getCurrentUser()).toBeUndefined();
-      expect(service.userChanged.emit).not.toHaveBeenCalled();
-    });
-  });
-
-  it('#isAuthenticated should be truthy for existing user, and falsy otherwise', () => {
-    service['currentUser'] = new User('1', 'test@gmail.com', 'token');
-    expect(service.isAuthenticated()).toBeTrue();
-
-    service['currentUser'] = null;
-    expect(service.isAuthenticated()).toBeFalse();
-  });
-
-  it('#getCurrentUser should return current user', () => {
-    const user = new User('1', 'test@gmail.com', 'token');
-    service['currentUser'] = user;
-    expect(service.getCurrentUser()).toEqual(user);
   });
 });
+

@@ -4,7 +4,7 @@ import { Directive, ElementRef, Input, OnInit } from '@angular/core';
   selector: '[mpHighlightFresh]'
 })
 export class HighlightFreshDirective implements OnInit {
-  @Input('mpHighlightFresh') date: Date;
+  @Input('mpHighlightFresh') date: string;
 
   constructor(private el: ElementRef) {
   }
@@ -15,7 +15,7 @@ export class HighlightFreshDirective implements OnInit {
 
   private highlight(): void {
     const currentMs = Date.now();
-    const dateMs = this.date.getTime();
+    const dateMs = new Date(this.date).getTime();
     const twoWeeksMs = 14 * (1000 * 60 * 60 * 24);
 
     if (dateMs > currentMs) {

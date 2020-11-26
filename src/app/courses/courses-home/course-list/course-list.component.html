@@ -1,11 +1,11 @@
-<div *ngIf="!hasCourses(); else notEmpty">
+<div *ngIf="!(courses$ | async)?.length; else notEmpty">
   No data. Feel free to add a new course.
 </div>
 <ng-template #notEmpty>
   <div class="mp-course-list">
     <div class="mp-course-list__items">
       <mp-course-item
-        *ngFor="let course of filteredCourses | orderBy:'createdAt'; trackBy: trackByCourses"
+        *ngFor="let course of courses$ | async; trackBy: trackByCourses"
         [course]="course"
         (courseDelete)="onCourseDelete($event)"
         class="mp-course-list__item"

@@ -1,37 +1,40 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Course } from './course.model';
-import { courses } from './course.mock';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ICourse } from './course.model';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CourseService {
-  public coursesChanged = new EventEmitter<Course[]>();
-
-  private courses: Course[] = [ ...courses ];
-
-  add(course: Course): Course {
-    const newCourse: Course = { ...course, id: `${Date.now()}` };
-    this.courses = [ ...this.courses, newCourse ];
-    return newCourse;
+  constructor(private http: HttpClient) {
   }
 
-  get(id): Course {
-    return this.courses.find((course) => course.id === id);
+  add(course: ICourse): Observable<ICourse> {
+    return this.http.post<ICourse>(`/courses`, course);
   }
 
-  getAll(): Course[] {
-    return [ ...this.courses ];
+  get(id): Observable<ICourse> {
+    return this.http.get<ICourse>(`/courses/${id}`);
   }
 
-  update(course: Course): Course {
-    const index = this.courses.findIndex(courseItem => courseItem.id === course.id);
-    const newCourse: Course = { ...this.courses[index], ...course };
-    this.courses.splice(index, 1, newCourse);
-    this.courses = [ ...this.courses ];
-    return newCourse;
+  getAll(options: any = {}): Observable<ICourse[]> {
+    const { term, sort = 'date', count = 5, start = 0 } = options;
+    let params = new HttpParams()
+      .set('sort', sort)
+      .set('start', start)
+      .set('count', count);
+
+    if (term) {
+      params = params.set('textFragment', term);
+    }
+
+    return this.http.get<ICourse[]>(`/courses`, { params });
   }
 
-  delete(id): void {
-    this.courses = this.courses.filter(course => course.id !== id);
-    this.coursesChanged.emit([ ...this.courses ]);
+  update(course: ICourse): Observable<ICourse> {
+    return this.http.patch<ICourse>(`/courses/${course.id}`, course);
+  }
+
+  delete(id): Observable<ICourse[]> {
+    return this.http.delete<ICourse[]>(`/courses/${id}`);
   }
 }
