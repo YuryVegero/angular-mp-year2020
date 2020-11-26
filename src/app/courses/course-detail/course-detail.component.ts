@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CourseService } from 'app/courses/course.service';
 import { Course } from 'app/courses/course.model';
@@ -7,6 +7,7 @@ import { Course } from 'app/courses/course.model';
   selector: 'mp-course-detail',
   templateUrl: './course-detail.component.html',
   styleUrls: [ './course-detail.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseDetailComponent implements OnInit {
   course: Course;
