@@ -8,7 +8,6 @@
         *ngFor="let course of filteredCourses | orderBy:'createdAt'; trackBy: trackByCourses"
         [course]="course"
         (courseDelete)="onCourseDelete($event)"
-        (courseEdit)="onCourseEdit($event)"
         class="mp-course-list__item"
       >
       </mp-course-item>

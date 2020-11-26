@@ -31,7 +31,6 @@ export class AuthService {
   logout(): boolean {
     this.saveUser();
     this.router.navigateByUrl('/login');
-    console.log('logout');
     return true;
   }
 

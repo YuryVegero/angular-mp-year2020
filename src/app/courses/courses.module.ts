@@ -4,30 +4,27 @@ import {
   CoursesHomeComponent,
   CourseListComponent,
   CourseItemComponent,
-  AddCourseComponent,
   SearchCourseComponent,
 } from './courses-home';
 import { CourseEditComponent } from './course-edit';
 import { CoursesRoutingModule } from './courses-routing.module';
 import { CourseService } from './course.service';
+import { CourseDetailComponent } from './course-detail';
 
 @NgModule({
   declarations: [
     CourseEditComponent,
+    CourseDetailComponent,
     CoursesHomeComponent,
     CourseListComponent,
     CourseItemComponent,
-    AddCourseComponent,
     SearchCourseComponent,
   ],
   imports: [
     CoursesRoutingModule,
     SharedModule,
   ],
-  exports: [
-    CoursesHomeComponent,
-  ],
-  providers: [ CourseService ]
+  providers: [ CourseService ],
 })
 export class CoursesModule {
 }

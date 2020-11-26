@@ -1,3 +1,11 @@
 .mp-breadcrumb {
   padding: 20px 0;
+
+  .breadcrumb-item__link {
+    &--active {
+      pointer-events: none;
+      cursor: default;
+      color: gray;
+    }
+  }
 }

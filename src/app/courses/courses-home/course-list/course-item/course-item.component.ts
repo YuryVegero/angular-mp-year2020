@@ -12,11 +12,8 @@ export class CourseItemComponent {
   @Output() courseDelete = new EventEmitter<Course>();
   @Output() courseEdit = new EventEmitter<Course>();
 
-  onDeleteClick(): void {
+  onDeleteClick(event: MouseEvent): void {
     this.courseDelete.emit(this.course);
-  }
-
-  onEditClick(): void {
-    this.courseEdit.emit(this.course);
+    event.preventDefault();
   }
 }

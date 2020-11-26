@@ -8,6 +8,7 @@ import { click } from 'tests/unit';
 import { DebugElement } from '@angular/core';
 import { AuthService } from 'app/auth/auth.service';
 import { Router } from '@angular/router';
+import { User } from 'app/auth/user.model';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -28,8 +29,10 @@ describe('LoginComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-    component.email = 'email';
-    component.password = 'password';
+    component.credentials = {
+      email: 'email',
+      password: 'password'
+    };
     componentDebug = fixture.debugElement;
 
     authService = TestBed.inject(AuthService);
@@ -51,12 +54,12 @@ describe('LoginComponent', () => {
     expect(component.onSubmit).toHaveBeenCalled();
   });
 
-  it('should call login and navigate to "/"', () => {
-    spyOn(authService, 'login');
+  it('should call login and navigate to "/courses"', () => {
+    spyOn(authService, 'login').and.returnValue(new User('1', 'email'));
     spyOn(routerService, 'navigateByUrl');
 
     component.onSubmit();
     expect(authService.login).toHaveBeenCalledWith({ email: 'email', password: 'password' });
-    expect(routerService.navigateByUrl).toHaveBeenCalledWith('/');
+    expect(routerService.navigateByUrl).toHaveBeenCalledWith('/courses');
   });
 });

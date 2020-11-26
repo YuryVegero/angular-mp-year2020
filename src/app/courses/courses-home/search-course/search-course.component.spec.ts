@@ -32,7 +32,7 @@ describe('SearchCourseComponent', () => {
 
   it('should call onSearchClick fn on click', () => {
     spyOn(component, 'onSearchClick');
-    const buttonDebug = searchCourseDebug.query(By.css('mp-button'));
+    const buttonDebug = searchCourseDebug.query(By.css('button.btn-success'));
     click(buttonDebug);
     expect(component.onSearchClick).toHaveBeenCalled();
   });

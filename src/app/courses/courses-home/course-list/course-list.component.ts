@@ -12,8 +12,6 @@ import {
 import { Course } from 'app/courses/course.model';
 import { FilterByPipe } from 'app/shared/pipes';
 import { CourseService } from 'app/courses/course.service';
-import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'mp-course-list',
@@ -31,7 +29,6 @@ export class CourseListComponent implements OnInit,
   constructor(
     private filterByPipe: FilterByPipe,
     private courseService: CourseService,
-    private router: Router,
   ) {
   }
 
@@ -56,10 +53,6 @@ export class CourseListComponent implements OnInit,
     if (confirm(`Are you sure you want to delete "${course.title}"?`)) {
       this.courseService.delete(course.id);
     }
-  }
-
-  onCourseEdit(course: Course): void {
-    this.router.navigateByUrl(`courses/${course.id}/edit`);
   }
 
   onLoadMoreClick(): void {
