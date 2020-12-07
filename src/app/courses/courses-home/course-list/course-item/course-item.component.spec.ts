@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CourseItemComponent } from './course-item.component';
-import { courses } from 'app/courses/course.mock';
+import { courses } from 'tests/unit/mocks/course.mock';
 import { By } from '@angular/platform-browser';
 import { Course } from 'app/courses/course.model';
 import { DurationPipe, SharedModule } from 'app/shared';
@@ -54,13 +54,13 @@ describe('CourseItemComponent as component', () => {
   });
 
   it('should display course title', () => {
-    const expected = expectedCourse.title.toUpperCase();
+    const expected = expectedCourse.name.toUpperCase();
     const element = courseDebug.query(By.css('.mp-course__title')).nativeElement;
     expect(element.textContent).toContain(expected);
   });
 
   it('should display course duration', () => {
-    const expected = new DurationPipe().transform(component.course.duration);
+    const expected = new DurationPipe().transform(component.course.length);
     const element = courseDebug.query(By.css('.mp-course__duration')).nativeElement;
     expect(element.textContent).toContain(expected);
   });
@@ -72,7 +72,7 @@ describe('CourseItemComponent as component', () => {
   });
 
   it('should display course created-at', () => {
-    const expected = new DatePipe('en-US').transform(component.course.createdAt, 'd MMM, y');
+    const expected = new DatePipe('en-US').transform(component.course.date, 'd MMM, y');
     const element = courseDebug.query(By.css('.mp-course__created-at')).nativeElement;
     expect(element.textContent).toContain(expected);
   });
@@ -111,18 +111,8 @@ describe('CourseItemComponent when inside a test host', () => {
 
   it('should display course title', () => {
     const titleElement = courseDebug.query(By.css('.mp-course__title')).nativeElement;
-    const expectedTitle = testHost.course.title.toUpperCase();
+    const expectedTitle = testHost.course.name.toUpperCase();
     expect(titleElement.textContent).toContain(expectedTitle);
-  });
-
-  it('should raise courseDelete event', () => {
-
-    spyOn(testHost, 'onCourseDelete');
-
-    const buttonDebug = courseDebug.query(By.css('button.btn-primary'));
-    click(buttonDebug);
-
-    expect(testHost.onCourseDelete).toHaveBeenCalledWith(testHost.course);
   });
 });
 

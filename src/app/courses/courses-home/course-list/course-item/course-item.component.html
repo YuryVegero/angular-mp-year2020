@@ -1,23 +1,23 @@
 <a
   class="mp-course"
   [routerLink]="[course.id]"
-  [mpHighlightFresh]="course.createdAt"
-  [ngClass]="{'mp-course--top-rated': course.topRated}"
+  [mpHighlightFresh]="course.date"
+  [ngClass]="{'mp-course--top-rated': course.isTopRated}"
 >
   <div class="row">
     <div class="mp-course__info col-10">
       <div class="mp-course__heading">
         <div class="mp-course__title">
-          {{course.title | uppercase}}
-          <span *ngIf="course.topRated" class="mp-course__top-rated"></span>
+          {{course.name | uppercase}}
+          <span *ngIf="course.isTopRated" class="mp-course__top-rated"></span>
         </div>
 
         <div class="mp-course__time">
           <div class="mp-course__duration">
-            {{course.duration | duration}}
+            {{course.length | duration}}
           </div>
           <div class="mp-course__created-at">
-            {{course.createdAt | date:'d MMM, y'}}
+            {{course.date | date:'d MMM, y'}}
           </div>
         </div>
       </div>

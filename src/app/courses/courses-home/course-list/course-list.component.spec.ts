@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CourseListComponent } from './course-list.component';
-import { courses } from 'app/courses/course.mock';
+import { courses } from 'tests/unit/mocks/course.mock';
 import { SharedModule } from 'app/shared';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement, SimpleChange } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Course } from 'app/courses/course.model';
 import { click } from 'tests/unit';
 import Spy = jasmine.Spy;
+import { Observable, of } from 'rxjs';
 
 describe('CourseListComponent as component', () => {
   let fixture: ComponentFixture<CourseListComponent>;
@@ -38,58 +39,22 @@ describe('CourseListComponent as component', () => {
     component = fixture.componentInstance;
     componentDebug = fixture.debugElement;
 
-    spyGetAll = spyOn(courseService, 'getAll').and.returnValue(courses);
+    spyGetAll = spyOn(courseService, 'getAll').and.returnValue(of(courses));
   });
 
   describe('Hooks', () => {
     it('onChanges: should call #filterCourses after first change', () => {
-      const filterCoursesSpy = spyOn<any>(component, 'filterCourses');
+      const fetchCoursesSpy = spyOn<any>(component, 'fetchCourses');
       const searchTermChange = new SimpleChange(null, null, true);
 
       component.ngOnChanges({ searchTerm: searchTermChange });
-      expect(filterCoursesSpy).not.toHaveBeenCalled();
+      expect(fetchCoursesSpy).not.toHaveBeenCalled();
 
       searchTermChange.firstChange = false;
       component.ngOnChanges({ searchTerm: searchTermChange });
-      expect(filterCoursesSpy).toHaveBeenCalled();
+      expect(fetchCoursesSpy).toHaveBeenCalled();
     });
 
-    describe('onInit', () => {
-      it('should set filteredCourses', () => {
-        expect(component.filteredCourses.length).toBe(0);
-        fixture.detectChanges();
-
-        expect(courseService.getAll).toHaveBeenCalled();
-        expect(component.filteredCourses.length).not.toBe(0);
-      });
-
-      it('should call #filterCourses', () => {
-        const filterCoursesSpy = spyOn<any>(component, 'filterCourses');
-        fixture.detectChanges();
-
-        expect(filterCoursesSpy).toHaveBeenCalled();
-      });
-
-      it('should subscribe to $courseService.coursesChanged', () => {
-        const subscribeSpy = spyOn(courseService.coursesChanged, 'subscribe');
-        fixture.detectChanges();
-
-        expect(subscribeSpy).toHaveBeenCalled();
-      });
-
-      it('should call #filterCourses on $courseService.coursesChanged.emit', () => {
-        spyGetAll.and.returnValue([]);
-        const filterCoursesSpy = spyOn<any>(component, 'filterCourses');
-        component.ngOnInit();
-
-        courseService.coursesChanged.subscribe((newCourses: Course[]) => {
-          expect(newCourses).toEqual(courses);
-        });
-
-        courseService.coursesChanged.emit(courses);
-        expect(filterCoursesSpy).toHaveBeenCalledTimes(2);
-      });
-    });
   });
 
   describe('Methods', () => {
@@ -108,7 +73,7 @@ describe('CourseListComponent as component', () => {
 
       it('should call courseService.delete fn if confirmed', () => {
         confirmSpy.and.returnValue(true);
-        const serviceDeleteSpy = spyOn(courseService, 'delete');
+        const serviceDeleteSpy = spyOn(courseService, 'delete').and.returnValue(of());
         component.onCourseDelete(courses[0]);
         expect(serviceDeleteSpy).toHaveBeenCalledWith(courses[0].id);
       });
@@ -121,21 +86,12 @@ describe('CourseListComponent as component', () => {
       });
     });
 
-    describe('#hasCourses ', () => {
-      it('should return true if there are filteredCourses', () => {
-        component.filteredCourses = courses;
-        expect(component.hasCourses()).toBeTrue();
-      });
-      it('should return false if there are no filteredCourses', () => {
-        component.filteredCourses = [];
-        expect(component.hasCourses()).toBeFalse();
-      });
-    });
-
-    it('#onLoadMoreClick: should log', () => {
-      spyOn(console, 'log');
+    it('#onLoadMoreClick: should call fetchCourses, set courses', () => {
+      const fetchCoursesSpy = spyOn<any>(component, 'fetchCourses').and.returnValue([]);
+      expect(component.courses$).toBeUndefined();
       component.onLoadMoreClick();
-      expect(console.log).toHaveBeenCalled();
+      expect(fetchCoursesSpy).toHaveBeenCalled();
+      expect(component.courses$).toBeDefined();
     });
   });
 
@@ -164,15 +120,6 @@ describe('CourseListComponent as component', () => {
       fixture.detectChanges();
       const child = componentDebug.query(By.css('mp-course-list'));
       expect(child).toBeDefined();
-    });
-
-    it('should render "No data" message if #hasCourses return false', () => {
-      spyOn(component, 'hasCourses').and.returnValue(false);
-      fixture.detectChanges();
-
-      const child = componentDebug.query(By.css('mp-course-list'));
-      expect(child).toBeNull();
-      expect(componentDebug.nativeElement.innerHTML).toContain('No data. Feel free to add a new course.');
     });
   });
 

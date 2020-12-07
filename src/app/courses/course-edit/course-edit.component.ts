@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CourseService } from 'app/courses/course.service';
-import { Course } from 'app/courses/course.model';
+import { Course, ICourse } from 'app/courses/course.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'mp-course-edit',
   templateUrl: './course-edit.component.html',
   styleUrls: [ './course-edit.component.scss' ],
 })
-export class CourseEditComponent implements OnInit {
+export class CourseEditComponent implements OnInit, OnDestroy {
+  private routerSub: Subscription;
+  private courseSub: Subscription;
+
   editMode = false;
   breadcrumbLabel: string;
   course = new Course({
     id: '',
-    title: '',
-    duration: 0,
+    name: '',
+    length: 0,
     description: '',
-    authors: '',
-    createdAt: null,
+    authors: [],
+    date: null,
   });
 
   constructor(
@@ -25,34 +29,35 @@ export class CourseEditComponent implements OnInit {
     private courseService: CourseService,
     private router: Router,
   ) {
+    this.onCancelClick = this.onCancelClick.bind(this);
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(({ id }: Params) => {
+    this.routerSub = this.route.params.subscribe(({ id }: Params) => {
       this.course.id = id;
       this.editMode = !!id;
 
       if (this.editMode) {
-        const course = this.courseService.get(this.course.id);
-        if (!course) {
-          this.router.navigateByUrl('/not-found');
-          return;
-        }
-
-        this.course = course;
-        this.breadcrumbLabel = `Edit "${this.course.title}"`;
-        this.initForm(this.course);
+        this.courseSub = this.courseService.get(this.course.id)
+          .subscribe(
+            (course: ICourse) => {
+              this.course = course;
+              this.breadcrumbLabel = `Edit "${this.course.name}"`;
+              this.initForm(this.course);
+            },
+            () => {
+              this.router.navigateByUrl('/not-found');
+            });
       }
     });
   }
 
   onSaveClick(): void {
     if (this.editMode) {
-      this.courseService.update(this.course);
+      this.courseService.update(this.course).subscribe(this.onCancelClick);
     } else {
-      this.courseService.add(this.course);
+      this.courseService.add(this.course).subscribe(this.onCancelClick);
     }
-    this.onCancelClick();
   }
 
   onCancelClick(): void {
@@ -61,5 +66,12 @@ export class CourseEditComponent implements OnInit {
 
   private initForm(course: Course): void {
     // init form
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub.unsubscribe();
+    if (this.courseSub) {
+      this.courseSub.unsubscribe();
+    }
   }
 }

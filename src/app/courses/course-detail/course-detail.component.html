@@ -2,8 +2,8 @@
   <mp-breadcrumb [activeLabel]="breadcrumbLabel"></mp-breadcrumb>
   <div *ngIf="course" class="mp-course-detail__content">
     <div class="container">
-      <h2>{{course.title}}</h2>
-      <div>Duration: {{course.duration | duration}}</div>
+      <h2>{{course.name}}</h2>
+      <div>Duration: {{course.length | duration}}</div>
       <p>{{course.description}}</p>
     </div>
   </div>

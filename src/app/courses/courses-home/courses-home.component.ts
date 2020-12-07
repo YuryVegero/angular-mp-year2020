@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CourseService } from 'app/courses/course.service';
 
 @Component({
   selector: 'mp-courses-home',

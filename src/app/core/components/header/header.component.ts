@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AuthService } from 'app/auth';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'mp-header',
   templateUrl: './header.component.html',
   styleUrls: [ './header.component.scss' ]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
+  private routerSub: Subscription;
+  private userSub: Subscription;
+
+  authenticated$: Observable<boolean>;
   userLogin = '';
-  authenticated = false;
   authBlockVisible = true;
 
   constructor(
@@ -18,22 +22,19 @@ export class HeaderComponent implements OnInit {
   ) {
     this.authBlockVisible = this.checkAuthBlockVisible(router.url);
 
-    router.events.subscribe((event) => {
+    this.routerSub = router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.authBlockVisible = this.checkAuthBlockVisible(event.url);
       }
     });
+
+    this.authenticated$ = this.authService.isAuthenticated$;
   }
 
   ngOnInit(): void {
-    this.authenticated = this.authService.isAuthenticated();
-    this.userLogin = this.authService.getCurrentUser()?.email;
-
-    this.authService.userChanged
-      .subscribe((user) => {
-        this.authenticated = this.authService.isAuthenticated();
-        this.userLogin = user?.email;
-      });
+    this.userSub = this.authService.user$.subscribe((user) => {
+      this.userLogin = user.login;
+    });
   }
 
   logout(): void {
@@ -43,5 +44,10 @@ export class HeaderComponent implements OnInit {
   private checkAuthBlockVisible(currentUrl): boolean {
     const authHiddenUrls = [ '/login' ];
     return !authHiddenUrls.includes(currentUrl);
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub.unsubscribe();
+    this.userSub.unsubscribe();
   }
 }

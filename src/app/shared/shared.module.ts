@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { BreadcrumbComponent, NotFoundComponent } from './components';
 import { DateInputDirective, HighlightFreshDirective } from './directives';
 import { DurationPipe, FilterByPipe, OrderByPipe } from './pipes';
@@ -20,6 +21,7 @@ import { DurationPipe, FilterByPipe, OrderByPipe } from './pipes';
   imports: [
     CommonModule,
     FormsModule,
+    HttpClientModule,
     RouterModule.forChild([]),
   ],
   exports: [

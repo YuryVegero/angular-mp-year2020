@@ -13,7 +13,8 @@ export class CourseItemComponent {
   @Output() courseEdit = new EventEmitter<Course>();
 
   onDeleteClick(event: MouseEvent): void {
-    this.courseDelete.emit(this.course);
     event.preventDefault();
+    this.courseDelete.emit(this.course);
+    event.stopPropagation();
   }
 }
