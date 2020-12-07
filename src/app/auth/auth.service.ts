@@ -16,7 +16,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User>({} as User);
   public user$ = this.userSubject.asObservable();
 
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private isAuthenticatedSubject = new BehaviorSubject(undefined);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
@@ -51,6 +51,8 @@ export class AuthService {
           this.setAuth,
           this.clearAuth,
         );
+    } else {
+      this.clearAuth();
     }
   }
 
