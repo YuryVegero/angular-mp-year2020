@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Course, ICourse } from 'app/courses/course.model';
 import { CourseService } from 'app/courses/course.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'mp-course-list',
@@ -21,13 +21,14 @@ import { Observable, Subscription } from 'rxjs';
 export class CourseListComponent implements OnInit, OnDestroy,
   OnChanges, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked {
   private deleteSub: Subscription;
+  private fetchSub: Subscription;
+
   private COURSES_PER_PAGE = 5;
   private page = 0;
   private count = this.COURSES_PER_PAGE;
 
   @Input() searchTerm = '';
-
-  public courses$: Observable<ICourse[]>;
+  public courses: ICourse[] = [];
 
   constructor(private courseService: CourseService) {
   }
@@ -35,24 +36,24 @@ export class CourseListComponent implements OnInit, OnDestroy,
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes.searchTerm.firstChange) {
       this.count = this.COURSES_PER_PAGE;
-      this.courses$ = this.fetchCourses();
+      this.fetchCourses();
     }
   }
 
   ngOnInit(): void {
-    this.courses$ = this.fetchCourses();
+    this.fetchCourses();
   }
 
   onCourseDelete(course: Course): void {
     if (confirm(`Are you sure you want to delete "${course.name}"?`)) {
       this.deleteSub = this.courseService.delete(course.id)
         .subscribe(() => {
-          this.courses$ = this.fetchCourses();
+          this.fetchCourses();
         });
     }
   }
 
-  private fetchCourses(options = {}): Observable<ICourse[]> {
+  private fetchCourses(options = {}): void {
     const params: any = {
       start: this.page,
       count: this.count,
@@ -63,12 +64,15 @@ export class CourseListComponent implements OnInit, OnDestroy,
       params.term = this.searchTerm;
     }
 
-    return this.courseService.getAll(params);
+    this.fetchSub = this.courseService.getAll(params)
+      .subscribe((courses) => {
+        this.courses = courses;
+      });
   }
 
   onLoadMoreClick(): void {
     this.count += this.COURSES_PER_PAGE;
-    this.courses$ = this.fetchCourses();
+    this.fetchCourses();
   }
 
   trackByCourses(index: number, course: Course): string {
@@ -92,8 +96,7 @@ export class CourseListComponent implements OnInit, OnDestroy,
   }
 
   ngOnDestroy(): void {
-    if (this.deleteSub) {
-      this.deleteSub.unsubscribe();
-    }
+    this.deleteSub?.unsubscribe();
+    this.fetchSub?.unsubscribe();
   }
 }
