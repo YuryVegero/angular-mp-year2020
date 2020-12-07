@@ -80,7 +80,7 @@ describe('AuthService', () => {
 
     it('private clearAuth should call tokenServiceSpy.clearToken, update user$ and isAuthenticated$', () => {
       authService.isAuthenticated$.subscribe((isAuth) => {
-        expect(isAuth).toBeFalse();
+        expect(isAuth).toBeFalsy();
       });
       authService.user$.subscribe((user) => {
         expect(user).toEqual({} as User);

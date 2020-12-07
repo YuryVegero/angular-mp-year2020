@@ -9,6 +9,8 @@ import { ApiPrefixInterceptor } from 'app/core/interceptors/api-prefix.intercept
 import { TokenInterceptor } from 'app/auth/token.interceptor';
 import { HttpErrorHandlerInterceptor } from 'app/core/interceptors/http-error-handler.interceptor';
 import { GlobalErrorHandlerService } from 'app/core/services/global-error-handler.service';
+import { LoadingInterceptor } from 'app/core/interceptors/loading.interceptor';
+import { SharedModule } from 'app/shared';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,7 @@ import { GlobalErrorHandlerService } from 'app/core/services/global-error-handle
     AppRoutingModule,
     AuthModule,
     CoreModule,
+    SharedModule,
   ],
   providers: [
     {
@@ -34,6 +37,11 @@ import { GlobalErrorHandlerService } from 'app/core/services/global-error-handle
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorHandlerInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true,
     },
     {

@@ -26,23 +26,6 @@ describe('CoursesHomeComponent', () => {
     coursesHomeDebug = fixture.debugElement.query(By.css('.mp-courses'));
   });
 
-  it('#onCourseSearch: should set searchTerm', () => {
-    fixture.detectChanges();
-    expect(component.searchTerm).toBe('');
-
-    component.onCourseSearch('test');
-    fixture.detectChanges();
-    expect(component.searchTerm).toBe('test');
-  });
-
-  it('$courseSearch: should call #onCourseSearch', () => {
-    fixture.detectChanges();
-    spyOn(component, 'onCourseSearch');
-    const searchCourseDebug = coursesHomeDebug.query(By.css('mp-search-course'));
-    searchCourseDebug.triggerEventHandler('courseSearch', 'term');
-    expect(component.onCourseSearch).toHaveBeenCalledWith('term');
-  });
-
   it('should render mp-breadcrumb', () => {
     const child = coursesHomeDebug.query(By.css('mp-breadcrumb'));
     expect(child).toBeDefined();

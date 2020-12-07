@@ -1,17 +1,9 @@
-import {
-  AfterContentChecked,
-  AfterContentInit,
-  AfterViewChecked,
-  AfterViewInit,
-  Component,
-  Input,
-  OnChanges, OnDestroy,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, } from '@angular/core';
 import { Course, ICourse } from 'app/courses/course.model';
 import { CourseService } from 'app/courses/course.service';
 import { Observable, Subject, Subscription } from 'rxjs';
+import { mergeMap, switchMap } from 'rxjs/operators';
+import { CourseSearchTermService } from 'app/courses/course-search-term.service';
 
 @Component({
   selector: 'mp-course-list',
@@ -19,41 +11,68 @@ import { Observable, Subject, Subscription } from 'rxjs';
   styleUrls: [ './course-list.component.scss' ],
 })
 export class CourseListComponent implements OnInit, OnDestroy,
-  OnChanges, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked {
-  private deleteSub: Subscription;
-  private fetchSub: Subscription;
+  AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked {
+  private subscription = new Subscription();
+  private fetchSubject$ = new Subject();
+  private deleteSubject$ = new Subject<string>();
 
   private COURSES_PER_PAGE = 5;
   private page = 0;
   private count = this.COURSES_PER_PAGE;
+  private searchTerm = '';
 
-  @Input() searchTerm = '';
   public courses: ICourse[] = [];
 
-  constructor(private courseService: CourseService) {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes.searchTerm.firstChange) {
-      this.count = this.COURSES_PER_PAGE;
-      this.fetchCourses();
-    }
+  constructor(
+    private courseService: CourseService,
+    private courseTermService: CourseSearchTermService,
+  ) {
   }
 
   ngOnInit(): void {
-    this.fetchCourses();
+    const subTerm = this.courseTermService.termChanged$
+      .subscribe((searchTerm) => {
+        this.count = this.COURSES_PER_PAGE;
+        this.searchTerm = searchTerm;
+        this.fetchSubject$.next();
+      });
+
+    const subDelete = this.deleteSubject$
+      .pipe(mergeMap((id) => this.courseService.delete(id)))
+      .subscribe(() => {
+        this.fetchSubject$.next();
+      });
+
+    const subFetch = this.fetchSubject$
+      .pipe(switchMap(() => this.fetchCourses()))
+      .subscribe((courses) => {
+        this.courses = courses;
+      });
+
+    this.subscription
+      .add(subTerm)
+      .add(subDelete)
+      .add(subFetch);
+
+    this.fetchSubject$.next();
   }
 
   onCourseDelete(course: Course): void {
     if (confirm(`Are you sure you want to delete "${course.name}"?`)) {
-      this.deleteSub = this.courseService.delete(course.id)
-        .subscribe(() => {
-          this.fetchCourses();
-        });
+      this.deleteSubject$.next(course.id);
     }
   }
 
-  private fetchCourses(options = {}): void {
+  onLoadMoreClick(): void {
+    this.count += this.COURSES_PER_PAGE;
+    this.fetchSubject$.next();
+  }
+
+  trackByCourses(index: number, course: Course): string {
+    return course.id;
+  }
+
+  private fetchCourses(options = {}): Observable<ICourse[]> {
     const params: any = {
       start: this.page,
       count: this.count,
@@ -64,19 +83,7 @@ export class CourseListComponent implements OnInit, OnDestroy,
       params.term = this.searchTerm;
     }
 
-    this.fetchSub = this.courseService.getAll(params)
-      .subscribe((courses) => {
-        this.courses = courses;
-      });
-  }
-
-  onLoadMoreClick(): void {
-    this.count += this.COURSES_PER_PAGE;
-    this.fetchCourses();
-  }
-
-  trackByCourses(index: number, course: Course): string {
-    return course.id;
+    return this.courseService.getAll(params);
   }
 
   ngAfterContentInit(): void {
@@ -96,7 +103,6 @@ export class CourseListComponent implements OnInit, OnDestroy,
   }
 
   ngOnDestroy(): void {
-    this.deleteSub?.unsubscribe();
-    this.fetchSub?.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

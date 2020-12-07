@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CourseService } from 'app/courses/course.service';
 
 @Component({
   selector: 'mp-courses-home',
@@ -7,9 +6,4 @@ import { CourseService } from 'app/courses/course.service';
   styleUrls: [ './courses-home.component.scss' ],
 })
 export class CoursesHomeComponent {
-  searchTerm = '';
-
-  onCourseSearch(searchTerm: string): void {
-    this.searchTerm = searchTerm;
-  }
 }
