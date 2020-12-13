@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { CourseService } from 'app/courses/course.service';
+import { Router } from '@angular/router';
 import { Course, ICourse } from 'app/courses/course.model';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { selectCourse, selectCourseId } from './store/course.selectors';
+import { AppState } from 'app/store/app.reducer';
+import { addCourse, editCourse, fetchCourse } from 'app/courses/course-edit/store/course.actions';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'mp-course-edit',
@@ -25,39 +29,36 @@ export class CourseEditComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private route: ActivatedRoute,
-    private courseService: CourseService,
     private router: Router,
+    private store: Store<AppState>
   ) {
-    this.onCancelClick = this.onCancelClick.bind(this);
   }
 
   ngOnInit(): void {
-    this.routerSub = this.route.params.subscribe(({ id }: Params) => {
-      this.course.id = id;
-      this.editMode = !!id;
+    this.routerSub = this.store.select(selectCourseId)
+      .subscribe((id) => {
+        this.course.id = id;
+        this.editMode = !!id;
 
-      if (this.editMode) {
-        this.courseSub = this.courseService.get(this.course.id)
-          .subscribe(
-            (course: ICourse) => {
-              this.course = course;
+        if (this.editMode) {
+          this.store.dispatch(fetchCourse({ payload: this.course.id }));
+          this.courseSub = this.store.select(selectCourse)
+            .pipe(
+              filter(course => !!course),
+              distinctUntilChanged(),
+            )
+            .subscribe((course: ICourse) => {
+              this.course = { ...course };
               this.breadcrumbLabel = `Edit "${this.course.name}"`;
               this.initForm(this.course);
-            },
-            () => {
-              this.router.navigateByUrl('/not-found');
             });
-      }
-    });
+        }
+      });
   }
 
   onSaveClick(): void {
-    if (this.editMode) {
-      this.courseService.update(this.course).subscribe(this.onCancelClick);
-    } else {
-      this.courseService.add(this.course).subscribe(this.onCancelClick);
-    }
+    const actionFn = this.editMode ? editCourse : addCourse;
+    this.store.dispatch(actionFn({ payload: { ...this.course } }));
   }
 
   onCancelClick(): void {

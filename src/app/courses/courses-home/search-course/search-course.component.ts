@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, pluck } from 'rxjs/operators';
-import { CourseSearchTermService } from 'app/courses/course-search-term.service';
+import { Store } from '@ngrx/store';
+import { CoursesState } from 'app/courses/courses-home/store/courses.reducer';
+import { setSearchTerm } from 'app/courses/courses-home/store/courses.actions';
+import { selectSearchTerm } from 'app/courses/courses-home/store/courses.selectors';
 
 @Component({
   selector: 'mp-search-course',
@@ -9,27 +12,28 @@ import { CourseSearchTermService } from 'app/courses/course-search-term.service'
   styleUrls: [ './search-course.component.scss' ]
 })
 export class SearchCourseComponent implements OnInit, OnDestroy {
-  searchTerm: string;
-  private searchTerm$ = new Subject<KeyboardEvent>();
+  searchTerm$ = this.store.select(selectSearchTerm);
+
+  private searchTermSubject$ = new Subject<KeyboardEvent>();
   private searchSub: Subscription;
 
-  constructor(private courseSearchService: CourseSearchTermService) {
+  constructor(private store: Store<CoursesState>) {
   }
 
   ngOnInit(): void {
-    this.searchSub = this.searchTerm$.pipe(
+    this.searchSub = this.searchTermSubject$.pipe(
       pluck<KeyboardEvent, string>('target', 'value'), // could use map(...),
       map(term => term?.trim()),
       filter(term => term.length > 2 || !term),
       debounceTime(200),
       distinctUntilChanged(),
     ).subscribe((term) => {
-      this.courseSearchService.changeSearch(term);
+      this.store.dispatch(setSearchTerm({ payload: term }));
     });
   }
 
   onKeyUp(event: KeyboardEvent): void {
-    this.searchTerm$.next(event);
+    this.searchTermSubject$.next(event);
   }
 
   ngOnDestroy(): void {

@@ -8,7 +8,7 @@ import { User } from 'app/auth/user.model';
 import { of } from 'rxjs';
 
 describe('AuthService', () => {
-  let httpTestingController: HttpTestingController;
+  /*let httpTestingController: HttpTestingController;
   let authService: AuthService;
   let routerServiceSpy: jasmine.SpyObj<Router>;
   let tokenServiceSpy: jasmine.SpyObj<TokenService>;
@@ -102,6 +102,6 @@ describe('AuthService', () => {
       authService.autoLogin();
       expect(fetchUserSpy).toHaveBeenCalledWith({ token: 'token' });
     });
-  });
+  });*/
 });
 

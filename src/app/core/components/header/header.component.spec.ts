@@ -17,7 +17,7 @@ const routerMock = {
 };
 
 describe('HeaderComponent', () => {
-  let component: HeaderComponent;
+/*  let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let componentDebug: DebugElement;
 
@@ -112,5 +112,5 @@ describe('HeaderComponent', () => {
 
     component.logout();
     expect(authService.logout).toHaveBeenCalled();
-  });
+  });*/
 });

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './auth';
 import { LoadingService } from 'app/core/services/loading.service';
 import { iif, Observable, of } from 'rxjs';
 import { delay, switchMap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/store/app.reducer';
+import { autoLogin } from 'app/auth/store/auth.actions';
 
 @Component({
   selector: 'mp-root',
@@ -13,13 +15,13 @@ export class AppComponent implements OnInit {
   isLoading$: Observable<boolean>;
 
   constructor(
-    private authService: AuthService,
     private loadingService: LoadingService,
+    private store: Store<AppState>,
   ) {
   }
 
   ngOnInit(): void {
-    this.authService.autoLogin();
+    this.store.dispatch(autoLogin());
     this.isLoading$ = this.loadingService.isLoading$
       .pipe(
         switchMap((loading) =>

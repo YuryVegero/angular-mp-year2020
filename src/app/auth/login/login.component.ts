@@ -1,16 +1,19 @@
-import { Component, OnDestroy } from '@angular/core';
-import { AuthService } from 'app/auth/auth.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginRequest } from 'app/auth/auth.model';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/store/app.reducer';
+import { login } from 'app/auth/store/auth.actions';
+import { authSelector } from 'app/auth/store/auth.selectors';
 
 @Component({
   selector: 'mp-login',
   templateUrl: './login.component.html',
   styleUrls: [ './login.component.scss' ]
 })
-export class LoginComponent implements OnDestroy {
-  private loginSub: Subscription;
+export class LoginComponent implements OnInit, OnDestroy {
+  private storeSub: Subscription;
 
   credentials: LoginRequest = {
     login: '',
@@ -19,25 +22,22 @@ export class LoginComponent implements OnDestroy {
   error: string = null;
 
   constructor(
-    private authService: AuthService,
-    private router: Router) {
+    private router: Router,
+    private store: Store<AppState>,
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.storeSub = this.store.select(authSelector).subscribe(authState => {
+      this.error = authState.error;
+    });
   }
 
   onSubmit(): void {
-    this.loginSub = this.authService.login(this.credentials)
-      .subscribe(
-        () => {
-          this.router.navigateByUrl('/courses');
-        },
-        () => {
-          this.error = 'Wrong email or password';
-        }
-      );
+    this.store.dispatch(login({ payload: { ...this.credentials } }));
   }
 
   ngOnDestroy(): void {
-    if (this.loginSub) {
-      this.loginSub.unsubscribe();
-    }
+    this.storeSub.unsubscribe();
   }
 }

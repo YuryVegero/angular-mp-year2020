@@ -1,5 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { NavigationActionTiming, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AuthModule } from './auth';
 import { CoreModule } from './core';
 import { AppComponent } from './app.component';
@@ -7,10 +11,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApiPrefixInterceptor } from 'app/core/interceptors/api-prefix.interceptor';
 import { TokenInterceptor } from 'app/auth/token.interceptor';
+import { AuthEffects } from 'app/auth/store/auth.effects';
 import { HttpErrorHandlerInterceptor } from 'app/core/interceptors/http-error-handler.interceptor';
 import { GlobalErrorHandlerService } from 'app/core/services/global-error-handler.service';
 import { LoadingInterceptor } from 'app/core/interceptors/loading.interceptor';
 import { SharedModule } from 'app/shared';
+import { appReducer } from './store/app.reducer';
+import { environment } from 'environments/environment';
 
 @NgModule({
   declarations: [
@@ -19,6 +26,10 @@ import { SharedModule } from 'app/shared';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    StoreModule.forRoot(appReducer),
+    EffectsModule.forRoot([ AuthEffects ]),
+    StoreRouterConnectingModule.forRoot(),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     AuthModule,
     CoreModule,
     SharedModule,

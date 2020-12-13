@@ -11,14 +11,16 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 import { filter, map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/store/app.reducer';
+import { selectUser } from 'app/auth/store/auth.selectors';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private store: Store<AppState>, private router: Router) {
   }
 
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
@@ -36,10 +38,10 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
   }
 
   private checkAccess(): Observable<boolean | UrlTree> {
-    return this.authService.isAuthenticated$
+    return this.store.select(selectUser)
       .pipe(
-        filter((isAuth) => isAuth !== undefined),
-        map((isAuth) => isAuth ? true : this.router.parseUrl('/login')),
+        filter((user) => user !== undefined),
+        map((user) => user ? true : this.router.parseUrl('/login')),
       );
   }
 }
