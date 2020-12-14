@@ -15,6 +15,8 @@ import { ApiPrefixInterceptor } from 'app/core/interceptors/api-prefix.intercept
 import { TokenInterceptor } from 'app/auth/token.interceptor';
 import { HttpErrorHandlerInterceptor } from 'app/core/interceptors/http-error-handler.interceptor';
 import { GlobalErrorHandlerService } from 'app/core/services/global-error-handler.service';
+import { CourseSearchTermService } from './course-search-term.service';
+import { LoadingInterceptor } from 'app/core/interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { GlobalErrorHandlerService } from 'app/core/services/global-error-handle
   ],
   providers: [
     CourseService,
+    CourseSearchTermService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ApiPrefixInterceptor,
@@ -44,6 +47,11 @@ import { GlobalErrorHandlerService } from 'app/core/services/global-error-handle
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorHandlerInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true,
     },
     {

@@ -2,11 +2,11 @@
   <mp-breadcrumb></mp-breadcrumb>
   <div class="mp-courses__content">
     <div class="container">
-      <mp-search-course (courseSearch)="onCourseSearch($event)"></mp-search-course>
+      <mp-search-course></mp-search-course>
       <div class="mp-add-course">
         <a routerLink="new" class="btn btn-primary">Add course</a>
       </div>
-      <mp-course-list [searchTerm]="searchTerm"></mp-course-list>
+      <mp-course-list></mp-course-list>
     </div>
   </div>
 </div>

@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { NavigationEnd, NavigationStart, Router, RouterEvent } from '@angular/router';
-import { ReplaySubject } from 'rxjs';
+import { of, ReplaySubject } from 'rxjs';
 
 import { HeaderComponent } from './header.component';
 import { AuthService } from 'app/auth';
@@ -16,7 +17,7 @@ const routerMock = {
 };
 
 describe('HeaderComponent', () => {
-  /*let component: HeaderComponent;
+  let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let componentDebug: DebugElement;
 
@@ -31,6 +32,7 @@ describe('HeaderComponent', () => {
           useValue: routerMock,
         }
       ],
+      imports: [ HttpClientTestingModule ],
     })
       .compileComponents();
   });
@@ -71,7 +73,7 @@ describe('HeaderComponent', () => {
 
   it('should display Login and hide Logout button if user is not authenticated', () => {
     component.authBlockVisible = true;
-    component.authenticated = false;
+    component.authenticated$ = of(false);
     fixture.detectChanges();
 
     const loginBtnDebug = componentDebug.query(By.css('.mp-header__login-btn'));
@@ -83,7 +85,7 @@ describe('HeaderComponent', () => {
 
   it('should display Logout and hide Login button if user is authenticated', () => {
     component.authBlockVisible = true;
-    component.authenticated = true;
+    component.authenticated$ = of(true);
     fixture.detectChanges();
 
     const loginBtnDebug = componentDebug.query(By.css('.mp-header__login-btn'));
@@ -95,7 +97,7 @@ describe('HeaderComponent', () => {
 
   it('should call logout fn on Logout link click', () => {
     component.authBlockVisible = true;
-    component.authenticated = true;
+    component.authenticated$ = of(true);
     fixture.detectChanges();
 
     spyOn(component, 'logout');
@@ -109,8 +111,6 @@ describe('HeaderComponent', () => {
     spyOn(authService, 'logout');
 
     component.logout();
-    const logoutBtnDebug = componentDebug.query(By.css('.mp-header__logout-btn'));
     expect(authService.logout).toHaveBeenCalled();
   });
-  */
 });
