@@ -1,0 +1,14 @@
+<div class="mp-course-authors">
+  <mp-typeahead
+    label="Authors lookup"
+    [items]="authorsList"
+    (itemChanged)="onAuthorType($event)"
+    (itemSelected)="onAuthorSelect($event)"
+  ></mp-typeahead>
+
+  <mp-tags-control
+    label="Authors"
+    [tags]="authors"
+    (tagsChanged)="onRemoveClick($event)"
+  ></mp-tags-control>
+</div>

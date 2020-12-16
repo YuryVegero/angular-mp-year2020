@@ -1,0 +1,32 @@
+.mp-tags {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    &-item {
+      border: 1px solid #acacac;
+      border-radius: 3px;
+      display: inline-block;
+      margin: 6px 4px;
+      padding: 5px;
+    }
+  }
+
+  &__remove-btn {
+    border: 1px solid;
+    color: #585858;
+    font: 700 16px Arial, sans-serif;
+    margin: 0 0 0 5px;
+    padding: 1px 3px;
+    vertical-align: middle;
+
+    &:hover {
+      text-decoration: none;
+      color: #c82333;
+    }
+  }
+}

@@ -2,47 +2,47 @@
   <mp-breadcrumb [activeLabel]="breadcrumbLabel"></mp-breadcrumb>
   <div class="mp-course-edit__content">
     <div class="container">
-      <form>
-        <div class="form-group">
-          <label for="title">Title</label>
-          <input id="title" [(ngModel)]="course.name" type="text" class="form-control" name="title">
+
+      <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+        <mp-text-input label="Title" [control]="courseForm.get('name')"></mp-text-input>
+        <mp-text-input label="Description" [control]="courseForm.get('description')" type="textarea"></mp-text-input>
+
+        <mp-duration-input label="Duration" formControlName="length"></mp-duration-input>
+        <div *ngIf="isValidControl(lengthControl)" class="alert alert-danger">
+          <span *ngIf="lengthControl.errors.required">Value is required.</span>
+          <span *ngIf="lengthControl.errors.rangeError">
+            Value must be within the range
+            {{ lengthControl.errors.rangeError.min }} - {{ lengthControl.errors.rangeError.max }}
+          </span>
         </div>
 
-        <div class="form-group">
-          <label for="description">Description</label>
-          <textarea id="description" [(ngModel)]="course.description" class="form-control" rows="4"
-                    name="description"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="date">Date</label>
-          <input id="date" [(mpDateInput)]="course.date" type="date" name="date"
-                 class="form-control col-5 col-sm-4 col-md-3">
-        </div>
-
-        <div class="form-group">
-          <label for="duration">Duration</label>
-          <input id="duration" [(ngModel)]="course.length" type="number" name="duration"
-                 class="form-control col-5 col-sm-4 col-md-3 mr-2 d-inline-block">
-          <span *ngIf="course.length > 0">{{course.length | duration}}</span>
+        <mp-date-input label="Date" formControlName="date"></mp-date-input>
+        <div *ngIf="isValidControl(dateControl)" class="alert alert-danger">
+          <span *ngIf="dateControl.errors.formatError">
+            Value must follow the format: dd/mm/yyy
+          </span>
         </div>
 
         <div class="form-group">
           <label for="top-rated">Top Rated</label>
-          <input id="top-rated" [(ngModel)]="course.isTopRated" type="checkbox" name="top-rated">
+          <input id="top-rated" formControlName="topRated" type="checkbox">
         </div>
 
-        <div class="form-group">
-          <label for="authors">Authors</label>
-          <input id="authors" [(ngModel)]="course.authors" type="text" class="form-control col-4" name="authors">
+        <mp-authors-control formControlName="authors" [authors]="authors$ | async"></mp-authors-control>
+        <div *ngIf="isValidControl(authorsControl)" class="alert alert-danger">
+          <span *ngIf="authorsControl.errors.required">Value is required.</span>
         </div>
 
         <div class="mp-course-edit__buttons">
           <button type="button" class="btn btn-danger" (click)="onCancelClick()">Cancel</button>
-          <button type="button" class="btn btn-success" (click)="onSaveClick()">Save</button>
+          <button type="submit" class="btn btn-success" [disabled]="courseForm.invalid">Save</button>
         </div>
       </form>
     </div>
   </div>
+
+  {{ courseForm.value | json }}
+  {{ courseForm.valid }}
+  {{ lengthControl.errors | json }}
 </div>
 

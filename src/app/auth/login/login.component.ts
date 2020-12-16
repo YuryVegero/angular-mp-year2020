@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'app/store/app.reducer';
 import { login } from 'app/auth/store/auth.actions';
 import { authSelector } from 'app/auth/store/auth.selectors';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'mp-login',
@@ -33,7 +34,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubmit(): void {
+  onSubmit(form: NgForm): void {
+    if (form.invalid) {
+      return;
+    }
     this.store.dispatch(login({ payload: { ...this.credentials } }));
   }
 

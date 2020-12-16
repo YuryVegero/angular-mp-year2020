@@ -1,4 +1,4 @@
-@import 'variables/colors';
+@import 'partials/variables/colors';
 
 @mixin link-color($link: $white, $visited: $white, $hover: $white, $active: $white) {
   & {
