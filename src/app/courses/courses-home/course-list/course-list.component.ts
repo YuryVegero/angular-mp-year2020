@@ -1,9 +1,16 @@
+import { Store } from '@ngrx/store';
 import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, } from '@angular/core';
 import { Course, ICourse } from 'app/courses/course.model';
-import { CourseService } from 'app/courses/course.service';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { mergeMap, switchMap } from 'rxjs/operators';
-import { CourseSearchTermService } from 'app/courses/course-search-term.service';
+import { Observable, Subscription } from 'rxjs';
+import { CoursesState } from 'app/courses/courses-home/store/courses.reducer';
+import { deleteCourse, fetchCourses } from 'app/courses/courses-home/store/courses.actions';
+import {
+  selectCourses,
+  selectError,
+  selectIsChanged,
+  selectIsLoading,
+  selectSearchTerm
+} from 'app/courses/courses-home/store/courses.selectors';
 
 @Component({
   selector: 'mp-course-list',
@@ -13,77 +20,74 @@ import { CourseSearchTermService } from 'app/courses/course-search-term.service'
 export class CourseListComponent implements OnInit, OnDestroy,
   AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked {
   private subscription = new Subscription();
-  private fetchSubject$ = new Subject();
-  private deleteSubject$ = new Subject<string>();
 
   private COURSES_PER_PAGE = 5;
   private page = 0;
   private count = this.COURSES_PER_PAGE;
   private searchTerm = '';
 
+  isLoading$: Observable<boolean> = this.store.select(selectIsLoading); // can be removed
+  error$: Observable<string | null> = this.store.select(selectError); // can be removed
+
   public courses: ICourse[] = [];
 
-  constructor(
-    private courseService: CourseService,
-    private courseTermService: CourseSearchTermService,
-  ) {
+  constructor(private store: Store<CoursesState>) {
   }
 
   ngOnInit(): void {
-    const subTerm = this.courseTermService.termChanged$
+    const subTerm = this.store.select(selectSearchTerm)
       .subscribe((searchTerm) => {
         this.count = this.COURSES_PER_PAGE;
         this.searchTerm = searchTerm;
-        this.fetchSubject$.next();
+        this.fetchCourses();
       });
 
-    const subDelete = this.deleteSubject$
-      .pipe(mergeMap((id) => this.courseService.delete(id)))
-      .subscribe(() => {
-        this.fetchSubject$.next();
+    const subChanged = this.store.select(selectIsChanged)
+      .subscribe((isChanged) => {
+        if (isChanged) {
+          this.fetchCourses();
+        }
       });
 
-    const subFetch = this.fetchSubject$
-      .pipe(switchMap(() => this.fetchCourses()))
+    const subCourses = this.store.select(selectCourses)
       .subscribe((courses) => {
         this.courses = courses;
       });
 
     this.subscription
       .add(subTerm)
-      .add(subDelete)
-      .add(subFetch);
+      .add(subChanged)
+      .add(subCourses);
 
-    this.fetchSubject$.next();
+    this.fetchCourses();
   }
 
   onCourseDelete(course: Course): void {
     if (confirm(`Are you sure you want to delete "${course.name}"?`)) {
-      this.deleteSubject$.next(course.id);
+      this.store.dispatch(deleteCourse({ payload: course.id }));
     }
   }
 
   onLoadMoreClick(): void {
     this.count += this.COURSES_PER_PAGE;
-    this.fetchSubject$.next();
+    this.fetchCourses();
   }
 
   trackByCourses(index: number, course: Course): string {
     return course.id;
   }
 
-  private fetchCourses(options = {}): Observable<ICourse[]> {
+  private fetchCourses(): void {
     const params: any = {
       start: this.page,
       count: this.count,
-      ...options,
     };
 
     if (this.searchTerm) {
       params.term = this.searchTerm;
     }
 
-    return this.courseService.getAll(params);
+    this.store.dispatch(fetchCourses({ payload: params }));
   }
 
   ngAfterContentInit(): void {

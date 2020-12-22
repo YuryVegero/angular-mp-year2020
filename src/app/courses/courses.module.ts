@@ -1,11 +1,8 @@
 import { ErrorHandler, NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { SharedModule } from 'app/shared';
-import {
-  CoursesHomeComponent,
-  CourseListComponent,
-  CourseItemComponent,
-  SearchCourseComponent,
-} from './courses-home';
+import { CourseItemComponent, CourseListComponent, CoursesHomeComponent, SearchCourseComponent, } from './courses-home';
 import { CourseEditComponent } from './course-edit';
 import { CoursesRoutingModule } from './courses-routing.module';
 import { CourseService } from './course.service';
@@ -15,8 +12,12 @@ import { ApiPrefixInterceptor } from 'app/core/interceptors/api-prefix.intercept
 import { TokenInterceptor } from 'app/auth/token.interceptor';
 import { HttpErrorHandlerInterceptor } from 'app/core/interceptors/http-error-handler.interceptor';
 import { GlobalErrorHandlerService } from 'app/core/services/global-error-handler.service';
-import { CourseSearchTermService } from './course-search-term.service';
 import { LoadingInterceptor } from 'app/core/interceptors/loading.interceptor';
+import { CoursesEffects } from './courses-home/store/courses.effects';
+import { CourseEffects } from './course-edit/store/course.effects';
+import { coursesFeatureKey, coursesReducer } from './courses-home/store/courses.reducer';
+import { courseFeatureKey, courseReducer } from './course-edit/store/course.reducer';
+
 
 @NgModule({
   declarations: [
@@ -30,10 +31,12 @@ import { LoadingInterceptor } from 'app/core/interceptors/loading.interceptor';
   imports: [
     CoursesRoutingModule,
     SharedModule,
+    StoreModule.forFeature(coursesFeatureKey, coursesReducer),
+    StoreModule.forFeature(courseFeatureKey, courseReducer),
+    EffectsModule.forFeature([ CoursesEffects, CourseEffects ]),
   ],
   providers: [
     CourseService,
-    CourseSearchTermService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ApiPrefixInterceptor,

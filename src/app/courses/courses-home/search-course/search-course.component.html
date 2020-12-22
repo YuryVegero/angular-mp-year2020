@@ -1,4 +1,4 @@
 <div class="mp-search-course">
-  <input [(ngModel)]="searchTerm" (keyup)="onKeyUp($event)" class="form-control" type="text"
+  <input [value]="searchTerm$ | async" (keyup)="onKeyUp($event)" class="form-control" type="text"
          placeholder="Text to search"/>
 </div>
