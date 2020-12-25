@@ -19,6 +19,7 @@ import { coursesFeatureKey, coursesReducer } from './courses-home/store/courses.
 import { courseFeatureKey, courseReducer } from './course-edit/store/course.reducer';
 import { AuthorsControlComponent } from './course-edit/authors-control';
 import { AuthorService } from 'app/courses/author.service';
+import { MissingTranslationHandler, TranslateCompiler, TranslateLoader, TranslateModule, TranslateParser } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { AuthorService } from 'app/courses/author.service';
     StoreModule.forFeature(coursesFeatureKey, coursesReducer),
     StoreModule.forFeature(courseFeatureKey, courseReducer),
     EffectsModule.forFeature([ CoursesEffects, CourseEffects ]),
+    TranslateModule.forChild(),
   ],
   providers: [
     CourseService,

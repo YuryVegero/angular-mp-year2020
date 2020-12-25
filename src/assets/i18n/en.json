@@ -1,0 +1,58 @@
+{
+  "pages": {
+    "login": {
+      "login": "Login",
+      "login-required": "Login is required",
+      "login-button-text": "Login",
+      "password": "Password",
+      "password-required": "Password is required",
+      "password-min-length": "Password must be at least 3 characters long"
+    },
+    "courses": {
+      "home": {
+        "add-button": "Add course",
+        "edit-button": "Edit",
+        "delete-button": "Delete",
+        "search-placeholder": "Text to search",
+        "load-more": "Load more"
+      },
+      "edit": {
+        "title": "Title",
+        "description": "Description",
+        "length": "Duration",
+        "top-rated": "Top Rated",
+        "cancel-button": "Cancel",
+        "save-button": "Save",
+        "authors-lookup": "Authors lookup",
+        "authors": "Authors"
+      }
+    }
+  },
+  "shared": {
+    "dictionary": {
+      "edit": "Edit"
+    },
+    "validation": {
+      "error-required": "Value is required",
+      "error-range": "Value must be within the range",
+      "error-date": "Value must follow the format",
+      "error-pattern": "Invalid format",
+      "error-min-length": "Value you entered is {{ actualLength }} characters long, but it must be at least {{ requiredLength }} characters",
+      "error-max-length": "Value you entered is {{ actualLength }} characters long, but it cannot be longer than {{ requiredLength }} characters"
+    },
+    "breadcrumb": {
+      "courses": "Courses",
+      "new": "New",
+      "edit": "Edit",
+      "detail": "Detail"
+    },
+    "header": {
+      "site-title": "Video courses",
+      "login": "Log in",
+      "logout": "Log out"
+    },
+    "footer": {
+      "disclaimer": "Copyright © VideoCourses. All rights reserved."
+    }
+  }
+}

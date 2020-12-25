@@ -8,16 +8,16 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private authPrefix = '/auth';
+  private apiBase = '/api/auth';
 
   constructor(private http: HttpClient) {
   }
 
   login(credentials: LoginRequest): Observable<Token> {
-    return this.http.post<Token>(`${this.authPrefix}/login`, credentials);
+    return this.http.post<Token>(`${this.apiBase}/login`, credentials);
   }
 
   fetchUser(token: Token): Observable<User> {
-    return this.http.post<User>(`${this.authPrefix}/userinfo`, token);
+    return this.http.post<User>(`${this.apiBase}/userinfo`, token);
   }
 }

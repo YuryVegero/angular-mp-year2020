@@ -4,8 +4,8 @@
   [mpHighlightFresh]="course.date"
   [ngClass]="{'mp-course--top-rated': course.isTopRated}"
 >
-  <div class="row">
-    <div class="mp-course__info col-10">
+  <div class="mp-course__content">
+    <div class="mp-course__info">
       <div class="mp-course__heading">
         <div class="mp-course__title">
           {{course.name | uppercase}}
@@ -23,9 +23,13 @@
       </div>
       <div class="mp-course__description">{{course.description}}</div>
     </div>
-    <div class="mp-course__controls col-2">
-      <a [routerLink]="[course.id,'edit']" class="btn btn-primary">Edit</a>
-      <button (click)="onDeleteClick($event)" class="btn btn-primary">Delete</button>
+    <div class="mp-course__controls">
+      <a [routerLink]="[course.id,'edit']" class="btn btn-primary mp-course__edit-btn">
+        {{ 'pages.courses.home.edit-button' | translate }}
+      </a>
+      <button (click)="onDeleteClick($event)" class="btn btn-primary">
+        {{ 'pages.courses.home.delete-button' | translate }}
+      </button>
     </div>
   </div>
 </a>

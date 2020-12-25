@@ -16,6 +16,7 @@ import { DateInputDirective, HighlightFreshDirective } from './directives';
 import { DurationPipe, FilterByPipe, OrderByPipe } from './pipes';
 import { TagsControlComponent } from './components/tags-control';
 import { TypeaheadComponent } from './components/typeahead';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -38,12 +39,14 @@ import { TypeaheadComponent } from './components/typeahead';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    TranslateModule,
     RouterModule.forChild([]),
   ],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    TranslateModule,
     BreadcrumbComponent,
     LoadingIndicatorComponent,
     TextInputComponent,

@@ -47,8 +47,14 @@
     text-transform: uppercase;
   }
 
+  &__right-section {
+    display: flex;
+    align-items: center;
+  }
+
   &__auth-block {
     font-size: 14px;
+    margin-right: 15px;
 
     a {
       @include link-color($white, $white, $white, $white);

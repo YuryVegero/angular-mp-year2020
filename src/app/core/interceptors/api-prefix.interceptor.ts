@@ -12,9 +12,12 @@ import { environment } from 'environments/environment';
 export class ApiPrefixInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    request = request.clone({
-      url: environment.apiBase + request.url,
-    });
+    const { url } = request;
+    if (url.startsWith('/api')) {
+      request = request.clone({
+        url: environment.apiBase + url.replace('/api', ''),
+      });
+    }
     return next.handle(request);
   }
 }

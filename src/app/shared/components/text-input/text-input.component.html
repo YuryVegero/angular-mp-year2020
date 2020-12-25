@@ -19,24 +19,22 @@
 
   <div *ngIf="showErrors" class="alert alert-danger">
     <span *ngIf="control.errors.required">
-      Value is required.
+      {{ 'shared.validation.error-required' | translate }}.
     </span>
     <span *ngIf="control.errors.minlength">
-      Value you entered is
-      {{ control.errors.minlength.actualLength }}
-      characters long, but it must be at least
-      {{ control.errors.minlength.requiredLength }}
-      characters
+      {{ 'shared.validation.error-min-length' | translate: {
+      actualLength: control.errors.minlength.actualLength,
+      requiredLength: control.errors.minlength.requiredLength
+    } }}
     </span>
     <span *ngIf="control.errors.maxlength">
-      Value you entered is
-      {{ control.errors.maxlength.actualLength }}
-      characters long, but it cannot be longer than
-      {{ control.errors.maxlength.requiredLength }}
-      characters
+      {{ 'shared.validation.error-max-length' | translate: {
+      actualLength: control.errors.maxlength.actualLength,
+      requiredLength: control.errors.maxlength.requiredLength
+    } }}
     </span>
     <span *ngIf="control.errors.pattern">
-      Invalid format
+      {{ 'shared.validation.error-pattern' | translate }}
     </span>
   </div>
 </div>

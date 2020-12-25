@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      breadcrumb: 'Courses',
+      breadcrumb: 'shared.breadcrumb.courses',
     },
     children: [
       {
@@ -19,21 +19,21 @@ const routes: Routes = [
         path: 'new',
         component: CourseEditComponent,
         data: {
-          breadcrumb: 'New',
+          breadcrumb: 'shared.breadcrumb.new',
         },
       },
       {
         path: ':id/edit',
         component: CourseEditComponent,
         data: {
-          breadcrumb: 'Edit',
+          breadcrumb: 'shared.breadcrumb.edit',
         },
       },
       {
         path: ':id',
         component: CourseDetailComponent,
         data: {
-          breadcrumb: 'Detail',
+          breadcrumb: 'shared.breadcrumb.detail',
         },
       },
     ],

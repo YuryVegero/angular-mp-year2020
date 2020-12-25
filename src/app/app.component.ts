@@ -5,6 +5,7 @@ import { delay, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/store/app.reducer';
 import { autoLogin } from 'app/auth/store/auth.actions';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mp-root',
@@ -17,7 +18,11 @@ export class AppComponent implements OnInit {
   constructor(
     private loadingService: LoadingService,
     private store: Store<AppState>,
+    private translateService: TranslateService,
   ) {
+    translateService.addLangs(['en', 'ru']);
+    translateService.setDefaultLang('en');
+    translateService.use('en');
   }
 
   ngOnInit(): void {

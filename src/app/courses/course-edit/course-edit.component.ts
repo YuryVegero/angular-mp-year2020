@@ -11,6 +11,7 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { createDurationRangeValidator } from 'app/shared/components/duration-input';
 import { validateDate } from 'app/shared/components/date-input';
 import { IAuthor } from 'app/courses/author.model';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mp-course-edit',
@@ -21,6 +22,7 @@ export class CourseEditComponent implements OnInit, OnDestroy {
   private courseIdSub: Subscription;
   private courseSub: Subscription;
   private authorTermSub: Subscription;
+  private langSub: Subscription;
 
   authors$: Observable<IAuthor[]>;
 
@@ -40,6 +42,7 @@ export class CourseEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private store: Store<AppState>,
     private fb: FormBuilder,
+    private translateService: TranslateService,
   ) {
   }
 
@@ -57,7 +60,7 @@ export class CourseEditComponent implements OnInit, OnDestroy {
               distinctUntilChanged(),
             )
             .subscribe((course: ICourse) => {
-              this.breadcrumbLabel = `Edit "${course.name}"`;
+              this.setBreadcrumbLabel(course.name);
               this.initForm(course);
             });
         }
@@ -68,6 +71,11 @@ export class CourseEditComponent implements OnInit, OnDestroy {
     this.authorTermSub = this.store.select(selectAuthorTerm)
       .subscribe((term) => {
         this.store.dispatch(fetchAuthors({ payload: term }));
+      });
+
+    this.langSub = this.translateService.onLangChange
+      .subscribe((event: LangChangeEvent) => {
+        this.setBreadcrumbLabel(this.nameControl.value);
       });
   }
 
@@ -91,6 +99,14 @@ export class CourseEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  get nameControl(): FormControl {
+    return this.courseForm.get('name') as FormControl;
+  }
+
+  get descriptionControl(): FormControl {
+    return this.courseForm.get('description') as FormControl;
+  }
+
   get lengthControl(): FormControl {
     return this.courseForm.get('length') as FormControl;
   }
@@ -108,9 +124,14 @@ export class CourseEditComponent implements OnInit, OnDestroy {
     return !!invalid && !!touched && !!errors;
   }
 
+  private setBreadcrumbLabel(label = ''): void {
+    this.breadcrumbLabel = this.translateService.instant('shared.dictionary.edit') + ` "${label}"`;
+  }
+
   ngOnDestroy(): void {
     this.courseIdSub.unsubscribe();
     this.authorTermSub.unsubscribe();
+    this.langSub.unsubscribe();
     if (this.courseSub) {
       this.courseSub.unsubscribe();
     }

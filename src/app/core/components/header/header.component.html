@@ -3,22 +3,40 @@
     <div class="mp-header__container">
       <a class="mp-header__logo-block" routerLink="/">
         <div class="mp-header__logo"></div>
-        <span class="mp-header__title">Video course</span>
+        <span class="mp-header__title">
+          {{ 'shared.header.site-title' | translate }}
+        </span>
       </a>
 
-      <div *ngIf="authBlockVisible" class="mp-header__auth-block">
-        <ng-container *ngIf="(user$ | async) as userInfo; else notAuth">
-          <span>{{userInfo?.login}} |</span>
-          <a (click)="logout()" class="mp-header__logout-btn" href="javascript:void(0);">
-            Log out
-          </a>
-        </ng-container>
+      <div class="mp-header__right-section">
 
-        <ng-template #notAuth>
-          <a routerLink="/login" class="mp-header__login-btn">
-            Log in
-          </a>
-        </ng-template>
+        <div *ngIf="authBlockVisible" class="mp-header__auth-block">
+          <ng-container *ngIf="(user$ | async) as userInfo; else notAuth">
+            <span>{{userInfo?.login}} |</span>
+            <a (click)="logout()" class="mp-header__logout-btn" href="javascript:void(0);">
+              {{ 'shared.header.logout' | translate }}
+            </a>
+          </ng-container>
+
+          <ng-template #notAuth>
+            <a routerLink="/login" class="mp-header__login-btn">
+              {{ 'shared.header.login' | translate }}
+            </a>
+          </ng-template>
+        </div>
+
+        <div class="form-inline">
+          <select
+            class="form-control"
+            #selectedLang
+            (change)="switchLang(selectedLang.value)">
+            <option *ngFor="let language of languages"
+                    [value]="language"
+                    [selected]="language === currentLang">
+              {{ language }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
