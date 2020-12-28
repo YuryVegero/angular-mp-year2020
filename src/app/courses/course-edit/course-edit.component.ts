@@ -8,8 +8,8 @@ import { selectAuthors, selectAuthorTerm, selectCourse, selectCourseId } from '.
 import { AppState } from 'app/store/app.reducer';
 import { addCourse, editCourse, fetchAuthors, fetchCourse } from 'app/courses/course-edit/store/course.actions';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
-import { createDurationRangeValidator } from 'app/shared/components/duration-input';
-import { validateDate } from 'app/shared/components/date-input';
+import { createRangeValidator } from 'app/shared/utils/validators/range-validator';
+import { validateDate } from 'app/shared/utils/validators/date-validator';
 import { IAuthor } from 'app/courses/author.model';
 
 @Component({
@@ -30,7 +30,7 @@ export class CourseEditComponent implements OnInit, OnDestroy {
   courseForm = this.fb.group({
     name: [ '', [ Validators.required, Validators.maxLength(50) ] ],
     description: [ '', [ Validators.required, Validators.maxLength(500) ] ],
-    length: [ 1, [ Validators.required, createDurationRangeValidator(1, 10000) ] ],
+    length: [ 1, [ Validators.required, createRangeValidator(1, 10000) ] ],
     date: [ '', [ validateDate ] ],
     topRated: [ false ],
     authors: [ [], [ Validators.required ] ], // , validateAuthors

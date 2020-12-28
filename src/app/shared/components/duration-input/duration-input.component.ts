@@ -1,20 +1,7 @@
 import { Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { createRangeValidator } from 'app/shared/utils/validators/range-validator';
 
-
-export function createDurationRangeValidator(minValue, maxValue): any {
-  return (control: FormControl) => {
-    const err = {
-      rangeError: {
-        given: control.value,
-        min: (minValue > 0) ? minValue : 1,
-        max: maxValue || 10000,
-      }
-    };
-
-    return (control.value > +maxValue || control.value < +minValue) ? err : null;
-  };
-}
 
 @Component({
   selector: 'mp-duration-input',
@@ -50,7 +37,7 @@ export class DurationInputComponent implements ControlValueAccessor, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.max || changes.min) {
-      this.validateFn = createDurationRangeValidator(this.min, this.max);
+      this.validateFn = createRangeValidator(this.min, this.max);
     }
   }
 

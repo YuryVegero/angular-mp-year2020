@@ -1,18 +1,9 @@
 import { Component, forwardRef, Input } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IAuthor } from 'app/courses/author.model';
 import { Store } from '@ngrx/store';
 import { AppState } from 'app/store/app.reducer';
 import { setAuthorTerm } from 'app/courses/course-edit/store/course.actions';
-
-export function validateAuthors(control: FormControl): object | null {
-  const err = { // TODO
-    error: {
-      given: control.value,
-    }
-  };
-  return null;
-}
 
 @Component({
   selector: 'mp-authors-control',
