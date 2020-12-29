@@ -37,10 +37,24 @@
     margin-right: 10px;
   }
 
+  &__content {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
   &__controls {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-end;
+    margin-left: 20px;
+  }
+
+  &__edit-btn {
+    margin-right: 10px;
   }
 
   &__description {

@@ -4,7 +4,9 @@
     <div class="container">
       <mp-search-course></mp-search-course>
       <div class="mp-add-course">
-        <a routerLink="new" class="btn btn-primary">Add course</a>
+        <a routerLink="new" class="btn btn-primary">
+          {{ 'pages.courses.home.add-button' | translate }}
+        </a>
       </div>
       <mp-course-list></mp-course-list>
     </div>

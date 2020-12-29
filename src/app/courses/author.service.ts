@@ -13,6 +13,6 @@ export class AuthorService {
     if (textFragment) {
       params = params.set('textFragment', textFragment);
     }
-    return this.http.get<IAuthor[]>(`/authors`, { params });
+    return this.http.get<IAuthor[]>(`/api/authors`, { params });
   }
 }

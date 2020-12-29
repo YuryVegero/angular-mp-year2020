@@ -1,0 +1,58 @@
+{
+  "pages": {
+    "login": {
+      "login": "Имя пользователя",
+      "login-required": "Требуется имя пользователя",
+      "login-button-text": "Войти",
+      "password": "Пароль",
+      "password-required": "Требуется пароль",
+      "password-min-length": "Пароль должен быть длиной не менее 3 символов"
+    },
+    "courses": {
+      "home": {
+        "add-button": "Добавить курс",
+        "edit-button": "Редактировать",
+        "delete-button": "Удалить",
+        "search-placeholder": "Текст для поиска",
+        "load-more": "Загрузить ещё"
+      },
+      "edit": {
+        "title": "Заголовок",
+        "description": "Описание",
+        "length": "Длительность",
+        "top-rated": "Популярный",
+        "cancel-button": "Отменить",
+        "save-button": "Сохранить",
+        "authors-lookup": "Поиск авторов",
+        "authors": "Авторы"
+      }
+    }
+  },
+  "shared": {
+    "dictionary": {
+      "edit": "Редактировать"
+    },
+    "validation": {
+      "error-required": "Требуется значение",
+      "error-range": "Значение должно быть внутри диапазона",
+      "error-date": "Значение должно следовать формату",
+      "error-pattern": "Неверный формат",
+      "error-min-length": "Введённое значение {{ actualLength }} символ(а/ов), но должно быть хотя бы {{ requiredLength }} символ(а/ов)",
+      "error-max-length": "Введённое значение {{ actualLength }} символ(а/ов), но не может быть длиннее, чем {{ requiredLength }} символ(а/ов)"
+    },
+    "breadcrumb": {
+      "courses": "Курсы",
+      "new": "Новый",
+      "edit": "Редактировать",
+      "detail": "Подробно"
+    },
+    "header": {
+      "site-title": "Видео курсы",
+      "login": "Войти",
+      "logout": "Выйти"
+    },
+    "footer": {
+      "disclaimer": "Авторски права © VideoCourses. Все права защищены."
+    }
+  }
+}

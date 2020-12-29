@@ -5,15 +5,17 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class CourseService {
+  private apiBase = '/api/courses';
+
   constructor(private http: HttpClient) {
   }
 
   add(course: ICourse): Observable<ICourse> {
-    return this.http.post<ICourse>(`/courses`, course);
+    return this.http.post<ICourse>(this.apiBase, course);
   }
 
   get(id): Observable<ICourse> {
-    return this.http.get<ICourse>(`/courses/${id}`);
+    return this.http.get<ICourse>(`${this.apiBase}/${id}`);
   }
 
   getAll(options: any = {}): Observable<ICourse[]> {
@@ -27,14 +29,14 @@ export class CourseService {
       params = params.set('textFragment', term);
     }
 
-    return this.http.get<ICourse[]>(`/courses`, { params });
+    return this.http.get<ICourse[]>(this.apiBase, { params });
   }
 
   update(course: ICourse): Observable<ICourse> {
-    return this.http.patch<ICourse>(`/courses/${course.id}`, course);
+    return this.http.patch<ICourse>(`${this.apiBase}/${course.id}`, course);
   }
 
   delete(id): Observable<ICourse[]> {
-    return this.http.delete<ICourse[]>(`/courses/${id}`);
+    return this.http.delete<ICourse[]>(`${this.apiBase}/${id}`);
   }
 }

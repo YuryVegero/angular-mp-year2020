@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ LoginComponent ],
@@ -12,6 +13,7 @@ import { LoginComponent } from './login';
     CommonModule,
     HttpClientModule,
     AuthRoutingModule,
+    TranslateModule,
   ],
 })
 export class AuthModule {
