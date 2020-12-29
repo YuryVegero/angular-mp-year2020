@@ -17,6 +17,8 @@ import { CoursesEffects } from './courses-home/store/courses.effects';
 import { CourseEffects } from './course-edit/store/course.effects';
 import { coursesFeatureKey, coursesReducer } from './courses-home/store/courses.reducer';
 import { courseFeatureKey, courseReducer } from './course-edit/store/course.reducer';
+import { AuthorsControlComponent } from './course-edit/authors-control';
+import { AuthorService } from 'app/courses/author.service';
 
 
 @NgModule({
@@ -27,6 +29,7 @@ import { courseFeatureKey, courseReducer } from './course-edit/store/course.redu
     CourseListComponent,
     CourseItemComponent,
     SearchCourseComponent,
+    AuthorsControlComponent,
   ],
   imports: [
     CoursesRoutingModule,
@@ -37,6 +40,7 @@ import { courseFeatureKey, courseReducer } from './course-edit/store/course.redu
   ],
   providers: [
     CourseService,
+    AuthorService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ApiPrefixInterceptor,

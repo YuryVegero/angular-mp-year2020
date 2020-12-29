@@ -1,0 +1,11 @@
+<div class="mp-tags">
+  <div class="form-group">
+    <label for="tags">{{ label }}</label>
+    <ul id="tags" class="mp-tags__list form-control">
+      <li *ngFor="let tag of tags; trackBy: trackByTags" class="mp-tags__list-item">
+        <span>{{tag.name}}</span>
+        <a (click)="onRemoveClick(tag)" class="mp-tags__remove-btn" href="javascript:void(0);">×</a>
+      </li>
+    </ul>
+  </div>
+</div>

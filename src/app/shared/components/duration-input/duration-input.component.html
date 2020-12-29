@@ -1,0 +1,9 @@
+<div class="duration-input">
+  <div class="form-group">
+    <label for="duration">{{ label }}</label>
+    <div class="duration-input__field">
+      <input id="duration" [(ngModel)]="durationValue" type="number" class="form-control mr-2 d-inline-block">
+      <span *ngIf="durationValue > 0">{{durationValue | duration}}</span>
+    </div>
+  </div>
+</div>

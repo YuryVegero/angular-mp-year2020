@@ -1,0 +1,42 @@
+<div class="mp-input">
+  <div class="form-group">
+    <label>{{ label }}</label>
+    <div [ngSwitch]="type" class="mp-input__field" [ngClass]="{'mp-input__field--error': showErrors}">
+      <input
+        *ngSwitchCase="'text'"
+        class="form-control"
+        [ngClass]="{required: isRequired}"
+        [formControl]="control"
+      />
+      <textarea
+        *ngSwitchCase="'textarea'"
+        class="form-control"
+        [ngClass]="{required: isRequired}"
+        [formControl]="control"
+        rows="4"></textarea>
+    </div>
+  </div>
+
+  <div *ngIf="showErrors" class="alert alert-danger">
+    <span *ngIf="control.errors.required">
+      Value is required.
+    </span>
+    <span *ngIf="control.errors.minlength">
+      Value you entered is
+      {{ control.errors.minlength.actualLength }}
+      characters long, but it must be at least
+      {{ control.errors.minlength.requiredLength }}
+      characters
+    </span>
+    <span *ngIf="control.errors.maxlength">
+      Value you entered is
+      {{ control.errors.maxlength.actualLength }}
+      characters long, but it cannot be longer than
+      {{ control.errors.maxlength.requiredLength }}
+      characters
+    </span>
+    <span *ngIf="control.errors.pattern">
+      Invalid format
+    </span>
+  </div>
+</div>

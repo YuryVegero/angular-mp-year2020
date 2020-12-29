@@ -1,0 +1,19 @@
+:host {
+  display: block;
+
+  &.ng-invalid {
+    padding-left: 10px;
+  }
+}
+
+
+.date-input {
+  &__field {
+    align-items: center;
+    display: flex;
+
+    .form-control {
+      width: auto;
+    }
+  }
+}

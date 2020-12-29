@@ -1,10 +1,12 @@
+import { IAuthor } from 'app/courses/author.model';
+
 export interface ICourse {
   id?: string;
   name: string;
   date: string;
   length: number;
   description: string;
-  authors: any[];
+  authors: IAuthor[];
   isTopRated?: boolean;
 }
 
@@ -14,7 +16,7 @@ export class Course implements ICourse {
   name: string;
   length: number;
   description: string;
-  authors: any[];
+  authors: IAuthor[];
   isTopRated?: boolean;
 
   constructor(course: ICourse) {

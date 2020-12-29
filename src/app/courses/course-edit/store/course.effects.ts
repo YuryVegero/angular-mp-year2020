@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { CourseService } from 'app/courses/course.service';
-import { ADD_COURSE, EDIT_COURSE, FETCH_COURSE, setCourse } from './course.actions';
+import { ADD_COURSE, EDIT_COURSE, FETCH_AUTHORS, FETCH_COURSE, setAuthors, setCourse } from './course.actions';
 import { Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
+import { AuthorService } from 'app/courses/author.service';
 
 @Injectable()
 export class CourseEffects {
@@ -12,6 +13,7 @@ export class CourseEffects {
   constructor(
     private actions$: Actions,
     private courseService: CourseService,
+    private authorService: AuthorService,
     private router: Router,
   ) {
   }
@@ -46,6 +48,16 @@ export class CourseEffects {
           .pipe(tap(() => this.goToCourses()))),
       ),
     { dispatch: false },
+  );
+
+  fetchAuthors$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FETCH_AUTHORS),
+      switchMap(({ payload }) => this.authorService.getAll(payload)
+        .pipe(
+          map(authors => setAuthors({ payload: authors })),
+        )),
+    ),
   );
 
   private goToCourses(): void {
